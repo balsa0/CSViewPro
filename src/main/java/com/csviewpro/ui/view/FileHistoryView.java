@@ -72,7 +72,7 @@ public class FileHistoryView extends BorderPane {
 						file.getCanonicalPath(),
 						file.exists() && file.isFile() ?
 								imageUtil.getResourceIconImage("actions/csv_sm.png") :
-								imageUtil.getResourceIconImage("actions/csv_missing_sm.png")
+								imageUtil.getResourceIconImage("actio   ns/csv_missing_sm.png")
 
 				);
 

@@ -1,16 +1,18 @@
 package com.csviewpro.ui.view;
 
 import com.csviewpro.controller.filehandling.FileHistoryController;
+import com.csviewpro.controller.loader.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.ui.toolbar.FileHistoryToolbar;
-import java.lang.String;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -19,8 +21,14 @@ import java.io.IOException;
 @Component
 public class FileHistoryView extends BorderPane {
 
+	// logger
+	private final static Logger log = Logger.getLogger(FileHistoryView.class);
+
 	@Autowired
 	FileHistoryController fileHistoryController;
+
+	@Autowired
+	LoadController loadController;
 
 	@Autowired
 	FileHistoryToolbar fileHistoryToolbar;
@@ -28,8 +36,12 @@ public class FileHistoryView extends BorderPane {
 	@Autowired
 	ImageUtil imageUtil;
 
+	// specific nodes
+	private TreeItem<String> rootNode;
+	private TreeItem<String> favouritesNode;
+	private TreeItem<String> recentsNode;
 
-	// internal treeview
+	// internal tree view
 	private TreeView treeView = new TreeView();
 
 	@PostConstruct
@@ -41,23 +53,23 @@ public class FileHistoryView extends BorderPane {
 	private void populate(){
 		// add toolbar
 		setTop(fileHistoryToolbar);
-		// set treeview as central element
+		// set tree view as central element
 		setCenter(treeView);
 	}
 
-	private void updateContent(){
+	public void updateContent(){
 		// root node
-		TreeItem<String> rootnode = new TreeItem<>(
+		rootNode = new TreeItem<>(
 				"Ismert fájlok",
 				imageUtil.getResourceIconImage("actions/tree_sm.png")
 		);
-		rootnode.setExpanded(true);
+		rootNode.setExpanded(true);
 
 		// set rootnode as root
-		treeView.setRoot(rootnode);
+		treeView.setRoot(rootNode);
 
 		// favourites
-		TreeItem<String> favouritesNode = new TreeItem<>(
+		favouritesNode = new TreeItem<>(
 				"Kedvencek",
 				imageUtil.getResourceIconImage("actions/star_sm.png")
 		);
@@ -72,29 +84,71 @@ public class FileHistoryView extends BorderPane {
 						file.getCanonicalPath(),
 						file.exists() && file.isFile() ?
 								imageUtil.getResourceIconImage("actions/csv_sm.png") :
-								imageUtil.getResourceIconImage("actio   ns/csv_missing_sm.png")
-
+								imageUtil.getResourceIconImage("actions/csv_missing_sm.png")
 				);
 
 				// add node to parent
 				favouritesNode.getChildren().add(node);
 
-			}catch (IOException e){
-
-			}
+			}catch (IOException e){/* ignoring exceptions */}
 		});
 
-		// history
-		TreeItem<String> historyNode = new TreeItem<>(
+		// recent files
+		recentsNode = new TreeItem<>(
 				"Előzmények",
 				imageUtil.getResourceIconImage("actions/clock_sm.png")
 		);
-		historyNode.setExpanded(true);
+		recentsNode.setExpanded(true);
+
+		// fill recent files
+		fileHistoryController.getRecentFiles().forEach(file -> {
+			try{
+
+				// create new node
+				TreeItem<String> node = new TreeItem<>(
+						file.getCanonicalPath(),
+						file.exists() && file.isFile() ?
+								imageUtil.getResourceIconImage("actions/csv_sm.png") :
+								imageUtil.getResourceIconImage("actions/csv_missing_sm.png")
+				);
+
+				// add node to parent
+				recentsNode.getChildren().add(node);
+
+			}catch (IOException e){/* ignoring exceptions */}
+		});
+
+		// set node click actions
+		treeView.setOnMouseClicked(event -> {
+			// only on double click
+			if(event.getClickCount() == 2){
+				// open the selected file
+				openSelectedFile();
+			}
+		});
 
 		// add nodes to root node
-		rootnode.getChildren().addAll(
+		rootNode.getChildren().addAll(
 				favouritesNode,
-				historyNode
+				recentsNode
+		);
+	}
+
+	/**
+	 * This method triggers opening of the selected item in the file history view.
+	 */
+	private void openSelectedFile(){
+
+		// get selected item
+		TreeItem selected = (TreeItem)treeView.getSelectionModel().getSelectedItem();
+
+		// check for special nodes and skip if selected
+		if(selected == rootNode || selected == recentsNode || selected == favouritesNode)
+			return;
+
+		// load the file
+		loadController.openFileAction(
+				new File((String)selected.getValue())
 		);
 	}
 

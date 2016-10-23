@@ -40,7 +40,7 @@ public class MainMenuBar extends MenuBar {
 	public void setupFileMenu(){
 		fileMenu_open.setGraphic(imageUtil.getResourceIconImage("actions/open_sm.png"));
 		fileMenu_open.setOnAction(event -> {
-			loadController.openFileAction();
+			loadController.openFileChooserAction();
 		});
 
 

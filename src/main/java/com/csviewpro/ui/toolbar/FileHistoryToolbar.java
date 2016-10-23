@@ -37,7 +37,7 @@ public class FileHistoryToolbar extends ToolBar {
 	private void setupButtons(){
 		openButton.setGraphic(imageUtil.getResourceIconImage("actions/open_md.png", 24));
 		openButton.setOnAction(event -> {
-			loadController.openFileAction();
+			loadController.openFileChooserAction();
 		});
 		openButton.setText("Megnyitás...");
 		openButton.setTooltip(new Tooltip("Megnyitás..."));

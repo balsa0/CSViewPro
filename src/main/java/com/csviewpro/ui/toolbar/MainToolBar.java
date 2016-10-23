@@ -37,7 +37,7 @@ public class MainToolBar extends ToolBar {
 	private void setupButtons(){
 		openButton.setGraphic(imageUtil.getResourceIconImage("actions/open_sm.png"));
 		openButton.setOnAction(event -> {
-			loadController.openFileAction();
+			loadController.openFileChooserAction();
 		});
 		openButton.setTooltip(new Tooltip("Megnyitás..."));
 	}

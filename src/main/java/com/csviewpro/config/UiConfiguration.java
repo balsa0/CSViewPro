@@ -1,8 +1,7 @@
 package com.csviewpro.config;
 
-import com.csviewpro.ui.MainLayout;
 import com.csviewpro.ui.MainScene;
-import javafx.stage.Stage;
+import com.csviewpro.ui.NotificationsWrapperLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,8 +16,8 @@ public class UiConfiguration {
 
 	@Bean
 	@Autowired
-	public MainScene mainScene(MainLayout mainLayout){
-		return new MainScene(mainLayout);
+	public MainScene mainScene(NotificationsWrapperLayout notificationsLayout){
+		return new MainScene(notificationsLayout);
 	}
 
 

@@ -2,9 +2,12 @@ package com.csviewpro.controller.loader;
 
 import com.csviewpro.controller.filehandling.FileHistoryController;
 import com.csviewpro.persistence.ApplicationPreferences;
+import com.csviewpro.service.filehandling.CsvParserService;
+import com.csviewpro.ui.NotificationsWrapperLayout;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -20,11 +23,20 @@ import java.util.prefs.Preferences;
 @Controller
 public class LoadController {
 
+	// logger
+	private final static Logger log = Logger.getLogger(LoadController.class);
+
 	@Autowired
 	ApplicationContext context;
 
 	@Autowired
 	FileHistoryController fileHistoryController;
+
+	@Autowired
+	CsvParserService csvParserService;
+
+	@Autowired
+	NotificationsWrapperLayout notificationsWrapperLayout;
 
 	// preferences
 	private Preferences loadPreferences;
@@ -90,7 +102,28 @@ public class LoadController {
 			return;
 		}
 
+		// start parsing and opening the file
+		try {
+			// show loading notification
+			notificationsWrapperLayout.setText(" Betöltés - "+file.getName());
+			notificationsWrapperLayout.show();
 
+			// start parsing
+			csvParserService.loadFile(file);
+
+			// hide modal
+//			notificationsWrapperLayout.hide();
+
+		}catch (Exception e){
+			// log the error message
+			log.error("There was an error during loading file: "+file.getAbsolutePath(),e);
+			// show alert
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Nem sikerült megnyitni a fájlt");
+			alert.setHeaderText(null);
+			alert.setContentText("Hiba lépett fel a fájl megnyitása közben: "+file.getAbsolutePath());
+			alert.show();
+		}
 
 
 	}

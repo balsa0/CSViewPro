@@ -77,7 +77,8 @@ public class FileHistoryView extends BorderPane {
 		removeFav.setOnAction(event -> {
 			// get selected item
 			String file = (String) (((TreeItem)treeView.getSelectionModel().getSelectedItem()).getValue());
-			// remove from favourites
+			// remove item from favourites
+			fileHistoryController.removeFavourite(file);
 
 		});
 

@@ -109,28 +109,45 @@
 			<artifactId>spring-context</artifactId>
 		</dependency>
 
-		<!-- Spring JDBC -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-		</dependency>
+		<!--&lt;!&ndash; Spring JDBC &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework</groupId>-->
+			<!--<artifactId>spring-jdbc</artifactId>-->
+		<!--</dependency>-->
 
-		<!-- H2 DB -->
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-		</dependency>
+		<!--&lt;!&ndash; H2 DB &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>org.hsqldb</groupId>-->
+			<!--<artifactId>hsqldb</artifactId>-->
+		<!--</dependency>-->
 
-		<!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-		</dependency>
+		<!--&lt;!&ndash; https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>commons-dbcp</groupId>-->
+			<!--<artifactId>commons-dbcp</artifactId>-->
+		<!--</dependency>-->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<!--CSV PARSER-->
+		<!--https://github.com/uniVocity/univocity-parsers/blob/master/README.md-->
+		<dependency>
+			<groupId>com.univocity</groupId>
+			<artifactId>univocity-parsers</artifactId>
+			<version>2.2.2</version>
+			<type>jar</type>
+		</dependency>
+
+		<!--controlsfx-->
+		<!--http://controlsfx.bitbucket.org/-->
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.12</version>
 		</dependency>
 
 	</dependencies>

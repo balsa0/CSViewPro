@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -106,6 +105,37 @@ public class FileHistoryController {
 		applicationContext.getBean(FileHistoryView.class).updateContent();
 
 		log.info("Added new favourite: "+filePath);
+	}
+
+	/**
+	 * Removes an entry to the list of favourites.
+	 * @param filePath the absolute path of the file to add.
+	 */
+	public void removeFavourite(String filePath){
+
+		// get fav list
+		List<String> favList = ApplicationPreferences.getAsList(
+				fileHistoryPreferences,
+				ApplicationPreferences.APP_FILEHISTORY_FAVOURITES
+		);
+
+		// add new item to the first place
+		favList.remove(filePath);
+
+		// convert list to set, then to list again to remove duplications
+		List<String> newFavs = new ArrayList<>(new LinkedHashSet<>(favList));
+
+		// update the list
+		ApplicationPreferences.putAsList(
+				fileHistoryPreferences,
+				ApplicationPreferences.APP_FILEHISTORY_FAVOURITES,
+				newFavs
+		);
+
+		// update view
+		applicationContext.getBean(FileHistoryView.class).updateContent();
+
+		log.info("Removed a favourite: "+filePath);
 	}
 
 	/**

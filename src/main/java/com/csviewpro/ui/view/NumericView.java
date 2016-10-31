@@ -30,7 +30,6 @@ public class NumericView extends BorderPane{
 		setTop(mainToolBar);
 		setCenter(tableGrid);
 
-
 	}
 
 

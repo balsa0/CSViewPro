@@ -127,6 +127,22 @@
 			<!--<artifactId>commons-dbcp</artifactId>-->
 		<!--</dependency>-->
 
+		<!--google guava-->
+		<!--https://github.com/google/guava-->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>20.0</version>
+		</dependency>
+
+		<!--natty date parser-->
+		<!--http://natty.joestelmach.com/-->
+		<dependency>
+			<groupId>com.joestelmach</groupId>
+			<artifactId>natty</artifactId>
+			<version>0.11</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>

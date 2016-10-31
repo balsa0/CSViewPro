@@ -1,6 +1,6 @@
 package com.csviewpro.ui.toolbar;
 
-import com.csviewpro.controller.loader.LoadController;
+import com.csviewpro.controller.filehandling.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

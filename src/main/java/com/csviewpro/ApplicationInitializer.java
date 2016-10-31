@@ -1,8 +1,7 @@
 package com.csviewpro;
 
 import com.csviewpro.config.ApplicationConfiguration;
-import com.csviewpro.config.UiConfiguration;
-import com.csviewpro.persistence.ApplicationPreferences;
+import com.csviewpro.domain.ApplicationPreferences;
 import com.csviewpro.ui.MainScene;
 import javafx.application.Application;
 import javafx.event.Event;

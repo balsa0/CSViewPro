@@ -1,13 +1,13 @@
-package com.csviewpro.controller.loader;
+package com.csviewpro.controller.filehandling;
 
-import com.csviewpro.controller.filehandling.FileHistoryController;
-import com.csviewpro.persistence.ApplicationPreferences;
+import com.csviewpro.controller.NotificationsController;
+import com.csviewpro.domain.ApplicationPreferences;
 import com.csviewpro.service.filehandling.CsvParserService;
-import com.csviewpro.ui.NotificationsWrapperLayout;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import org.controlsfx.dialog.ExceptionDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,7 @@ public class LoadController {
 	CsvParserService csvParserService;
 
 	@Autowired
-	NotificationsWrapperLayout notificationsWrapperLayout;
+	NotificationsController notificationsController;
 
 	// preferences
 	private Preferences loadPreferences;
@@ -105,24 +105,28 @@ public class LoadController {
 		// start parsing and opening the file
 		try {
 			// show loading notification
-			notificationsWrapperLayout.setText(" Betöltés - "+file.getName());
-			notificationsWrapperLayout.show();
+			notificationsController.showLoaderNotification(file.getName());
 
 			// start parsing
 			csvParserService.loadFile(file);
 
-			// hide modal
-//			notificationsWrapperLayout.hide();
-
 		}catch (Exception e){
+
 			// log the error message
 			log.error("There was an error during loading file: "+file.getAbsolutePath(),e);
+
 			// show alert
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Nem sikerült megnyitni a fájlt");
 			alert.setHeaderText(null);
-			alert.setContentText("Hiba lépett fel a fájl megnyitása közben: "+file.getAbsolutePath());
+			alert.setContentText("Hiba lépett fel a fájl megnyitása közben: "+file.getAbsolutePath()+"" +
+					"\r\n"+e.getLocalizedMessage());
 			alert.show();
+
+		}finally {
+			// hide modal
+			notificationsController.hide();
+
 		}
 
 

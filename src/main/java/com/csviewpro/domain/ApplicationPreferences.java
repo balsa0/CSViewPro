@@ -1,4 +1,4 @@
-package com.csviewpro.persistence;
+package com.csviewpro.domain;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

@@ -5,8 +5,7 @@ package com.csviewpro.domain.exception;
  */
 public class FileLoadingException extends RuntimeException {
 
-	public FileLoadingException() {
-	}
+	public FileLoadingException() {}
 
 	public FileLoadingException(String message) {
 		super(message);

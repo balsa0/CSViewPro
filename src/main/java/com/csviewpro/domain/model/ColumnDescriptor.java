@@ -1,8 +1,6 @@
 package com.csviewpro.domain.model;
 
 import com.csviewpro.domain.model.enumeration.ColumnRole;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 
 /**
  * Created by Balsa on 2016. 10. 31..

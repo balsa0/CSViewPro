@@ -1,12 +1,13 @@
 package com.csviewpro.domain.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Balsa on 2016. 10. 31..
  */
-public class GeoPoint {
+public class GeoPoint implements Serializable {
 
 	private String name;
 	private Double xCoo;

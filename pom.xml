@@ -129,11 +129,11 @@
 
 		<!--google guava-->
 		<!--https://github.com/google/guava-->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>20.0</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.google.guava</groupId>-->
+			<!--<artifactId>guava</artifactId>-->
+			<!--<version>20.0</version>-->
+		<!--</dependency>-->
 
 		<!--natty date parser-->
 		<!--http://natty.joestelmach.com/-->

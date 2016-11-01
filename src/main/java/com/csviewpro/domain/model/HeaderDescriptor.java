@@ -1,5 +1,7 @@
 package com.csviewpro.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Map;
  */
 public class HeaderDescriptor implements Serializable{
 
+	@JsonProperty("descriptors")
 	private Map<Integer, ColumnDescriptor> descriptorData;
 
 	public HeaderDescriptor(){

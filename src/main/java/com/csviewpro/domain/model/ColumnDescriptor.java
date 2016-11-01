@@ -1,6 +1,7 @@
 package com.csviewpro.domain.model;
 
 import com.csviewpro.domain.model.enumeration.ColumnRole;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Balsa on 2016. 10. 31..
@@ -15,8 +16,13 @@ public class ColumnDescriptor {
 	public static final String DEFAULT_TITLE_DATETIME = "Dátum/Idő";
 	public static final String DEFAULT_TITLE_UNKNOWN = "Oszlop";
 
+	@JsonProperty
 	private Class type;
+
+	@JsonProperty
 	private String name;
+
+	@JsonProperty
 	private ColumnRole role;
 
 	public ColumnDescriptor(Class type, String name, ColumnRole role) {

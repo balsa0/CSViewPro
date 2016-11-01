@@ -1,6 +1,7 @@
 package com.csviewpro.domain.model;
 
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,12 +14,15 @@ import java.util.List;
 public class DataSet implements Serializable{
 
 	// header metadata
+	@JsonProperty
 	private HeaderDescriptor headerDescriptor;
 
 	// geodetic system metadata
+	@JsonProperty
 	private GeodeticSystem geodeticSystem;
 
 	// points data
+	@JsonProperty
 	private List<GeoPoint> points;
 
 	/**

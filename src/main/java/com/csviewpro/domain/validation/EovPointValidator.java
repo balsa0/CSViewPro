@@ -7,6 +7,7 @@ import org.springframework.validation.Validator;
 /**
  * Created by Balsa on 2016. 10. 31..
  */
+@Deprecated
 public class EovPointValidator implements Validator{
 
 	public static final double EOE_XY_BOUNDARY = 400000.00;

@@ -8,6 +8,7 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -24,6 +25,9 @@ public class CsvParserService {
 
 	// logger
 	private final static Logger log = Logger.getLogger(CsvParserService.class);
+
+	@Autowired
+	TypeConverterService typeConverterService;
 
 	/**
 	 * Loads and processes a given file.
@@ -74,6 +78,12 @@ public class CsvParserService {
 								.collect(Collectors.toList()),
 						","
 				) + ".");
+
+		// convert types of the data set
+		List<Object[]> data = convertTypes(preProcessed, columnTypes);
+
+		log.info("Type conversion finished");
+
 	}
 
 	/**
@@ -223,10 +233,10 @@ public class CsvParserService {
 					continue;
 
 				// check for double
-				if(doublePattern.matcher(cell).matches()){
+				if(doublePattern.matcher(cell).find()){
 					doubleCount++;
 				// check for long
-				}else if(longPattern.matcher(cell).matches()){
+				}else if(longPattern.matcher(cell).find()){
 					longCount++;
 				// check others
 				}else{
@@ -303,6 +313,48 @@ public class CsvParserService {
 
 		return resolvedTypes;
 
+	}
+
+	/**
+	 * This function converts data set of strings to the given types.
+	 * @param data the data set tot convert.
+	 * @param columnTypes the map describing the column types.
+	 * @return the input data set with the converted types.
+	 */
+	public List<Object[]> convertTypes(List<String[]> data, Map<Integer, Class> columnTypes){
+
+		List<Object[]> result = new ArrayList<>();
+
+		// perse every row
+		for (String[] row : data){
+			result.add(convertRowTypes(row, columnTypes));
+		}
+
+		return result;
+	}
+
+	/**
+	 * This function converts an array of strings (a data set row) to the correct types.
+	 * @param data the input array as strings.
+	 * @param columnTypes the map describing the column types.
+	 * @return the input data set with the converted types.
+	 */
+	public Object[] convertRowTypes(String[] data, Map<Integer, Class> columnTypes){
+
+		// create an equally sized array of objects
+		Object[] result = new Object[data.length];
+
+		// convert every cell
+		for(int i = 0; i < data.length; i++){
+
+			result[i] = typeConverterService.convertTo(
+					columnTypes.get(i),
+					data[i]
+			);
+		}
+
+		// return converted row
+		return result;
 	}
 
 

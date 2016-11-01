@@ -1,5 +1,7 @@
 package com.csviewpro.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,13 +11,23 @@ import java.util.Map;
  */
 public class GeoPoint implements Serializable {
 
+	@JsonProperty
 	private String name;
+
+	@JsonProperty("x")
 	private Double xCoo;
+
+	@JsonProperty("y")
 	private Double yCoo;
+
+	@JsonProperty("z")
 	private Double zCoo;
+
+	@JsonProperty
 	private String code;
 
-	private Map<Integer, Object> others = new HashMap<>();
+	@JsonProperty("valueMap")
+	private Map<Integer, Object> additional = new HashMap<>();
 
 	public String getName() {
 		return name;

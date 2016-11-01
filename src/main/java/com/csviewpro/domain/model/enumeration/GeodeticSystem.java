@@ -1,9 +1,9 @@
 package com.csviewpro.domain.model.enumeration;
 
 /**
- * Created by Balsa on 2016. 11. 01..
+ * This enumeration contains all supported geodetic systems and holds some meta-data as well.
  */
-public enum GeodeticSystems {
+public enum GeodeticSystem {
 
 	// EOV - Egységes országos vetület (EPSG:23700)
 	// http://spatialreference.org/ref/epsg/23700/
@@ -15,7 +15,7 @@ public enum GeodeticSystems {
 	// bounds
 	final double xMin, yMin, xMax, yMax;
 
-	GeodeticSystems(double xMin, double yMin, double xMax, double yMax) {
+	GeodeticSystem(double xMin, double yMin, double xMax, double yMax) {
 
 		this.xMin = xMin;
 		this.yMin = yMin;

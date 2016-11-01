@@ -109,6 +109,13 @@
 			<artifactId>spring-context</artifactId>
 		</dependency>
 
+		<!--Jackson-->
+		<!--https://github.com/FasterXML/jackson-annotations-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+
 		<!--&lt;!&ndash; Spring JDBC &ndash;&gt;-->
 		<!--<dependency>-->
 			<!--<groupId>org.springframework</groupId>-->

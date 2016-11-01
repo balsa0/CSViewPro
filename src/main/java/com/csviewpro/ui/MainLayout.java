@@ -4,6 +4,7 @@ import com.csviewpro.ui.menu.MainMenuBar;
 import com.csviewpro.ui.view.FileHistoryView;
 import com.csviewpro.ui.view.NumericView;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.StatusBar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +25,18 @@ public class MainLayout extends BorderPane{
 	FileHistoryView fileHistoryView;
 
 	@PostConstruct
-	public void init(){
-		setupProperties();
+	private void init(){
 		populate();
 	}
 
 	/**
 	 * Add elements to the layout
 	 */
-	public void populate(){
+	private void populate(){
 		// add elements
 		setTop(mainMenuBar);
 		setCenter(fileHistoryView);
 		setBottom(new StatusBar());
-	}
-
-	public void setupProperties(){
-
 	}
 
 }

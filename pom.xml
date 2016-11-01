@@ -137,6 +137,7 @@
 
 		<!--natty date parser-->
 		<!--http://natty.joestelmach.com/-->
+		<!--https://github.com/joestelmach/natty-->
 		<dependency>
 			<groupId>com.joestelmach</groupId>
 			<artifactId>natty</artifactId>

@@ -1,13 +1,15 @@
 package com.csviewpro.controller.filehandling;
 
+import com.csviewpro.controller.ApplicationUiStateController;
 import com.csviewpro.controller.NotificationsController;
+import com.csviewpro.controller.TableGridController;
 import com.csviewpro.domain.ApplicationPreferences;
-import com.csviewpro.service.filehandling.CsvParserService;
+import com.csviewpro.service.CsvParserService;
+import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import org.controlsfx.dialog.ExceptionDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -27,16 +29,22 @@ public class LoadController {
 	private final static Logger log = Logger.getLogger(LoadController.class);
 
 	@Autowired
-	ApplicationContext context;
+	private ApplicationContext context;
 
 	@Autowired
-	FileHistoryController fileHistoryController;
+	private FileHistoryController fileHistoryController;
 
 	@Autowired
-	CsvParserService csvParserService;
+	private CsvParserService csvParserService;
 
 	@Autowired
-	NotificationsController notificationsController;
+	private NotificationsController notificationsController;
+
+	@Autowired
+	private ApplicationUiStateController uiStateController;
+
+	@Autowired
+	private TableGridController tableGridController;
 
 	// preferences
 	private Preferences loadPreferences;
@@ -107,8 +115,28 @@ public class LoadController {
 			// show loading notification
 			notificationsController.showLoaderNotification(file.getName());
 
-			// start parsing
-			csvParserService.loadFile(file);
+			// start parsing on a different thread
+			Task<Void> loaderTask = new Task<Void>(){
+
+				@Override
+				protected Void call() throws Exception {
+					// service call
+					csvParserService.loadFile(file);
+
+					return null;
+				}
+			};
+
+			new Thread(loaderTask).start();
+
+			loaderTask.setOnSucceeded(event -> {
+				// set main layout state to numeric view
+				uiStateController.activateFileOpenState(file);
+				// hide loader bar
+				notificationsController.hide();
+				// rebuild table grid
+				tableGridController.rebuildTable();
+			});
 
 		}catch (Exception e){
 
@@ -123,11 +151,11 @@ public class LoadController {
 					"\r\n"+e.getLocalizedMessage());
 			alert.show();
 
-		}finally {
+		}/*finally {
 			// hide modal
-			notificationsController.hide();
+			//notificationsController.hide();
 
-		}
+		}*/
 
 
 	}

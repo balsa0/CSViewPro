@@ -16,6 +16,8 @@ import java.util.prefs.Preferences;
 
 public class ApplicationInitializer extends Application {
 
+	public static final String APPLICATION_NAME = "CSView Pro";
+
 	public static void main(String[] args){
 		launch(args);
 	}
@@ -30,7 +32,7 @@ public class ApplicationInitializer extends Application {
 		ConfigurableListableBeanFactory beanFactory = ((ConfigurableApplicationContext) context).getBeanFactory();
 		beanFactory.registerSingleton(primaryStage.getClass().getCanonicalName(), primaryStage);
 
-		primaryStage.setTitle("CSView Pro");
+		primaryStage.setTitle(APPLICATION_NAME);
 		primaryStage.setMinHeight(300);
 		primaryStage.setMinWidth(400);
 

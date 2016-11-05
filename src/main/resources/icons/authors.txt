@@ -1,0 +1,13 @@
+=======
+AUTHORS
+=======
+
+CSView Pro logo 
+	by Balázs Kóti
+
+Office Icons (menu/toolbar/button/etc. icons)
+	by Icon8
+	https://icons8.com/web-app/new-icons/office
+	License info:
+		Creative Commons Attribution-NoDerivs 3.0 Unported
+		https://icons8.com/license

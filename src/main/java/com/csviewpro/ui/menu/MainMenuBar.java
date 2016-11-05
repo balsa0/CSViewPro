@@ -31,23 +31,30 @@ public class MainMenuBar extends MenuBar {
 	@Autowired
 	ImageUtil imageUtil;
 
+	// file
 	private Menu fileMenu = new Menu("Fájl");
 	private MenuItem fileMenu_open = new MenuItem("Megnyitás...");
 	private MenuItem fileMenu_exit = new MenuItem("Kilépés");
+
+	// help
+	private Menu helpMenu = new Menu("Súgó");
+	private MenuItem helpMenu_about = new MenuItem("Névjegy és Licenszek");
 
 	@PostConstruct
 	public void init(){
 		populate();
 		setupFileMenu();
+		setupHelpMenu();
 	}
 
-	public void populate(){
-		getMenus().add(
-				fileMenu
+	private void populate(){
+		getMenus().addAll(
+				fileMenu,
+				helpMenu
 		);
 	}
 
-	public void setupFileMenu(){
+	private void setupFileMenu(){
 		// open menu item
 		fileMenu_open.setGraphic(imageUtil.getResourceIconImage("actions/open_sm.png"));
 		fileMenu_open.setOnAction(event -> {
@@ -66,6 +73,17 @@ public class MainMenuBar extends MenuBar {
 				new SeparatorMenuItem(),
 				fileMenu_exit
 		);
+	}
+
+	private void setupHelpMenu(){
+		// about menu
+		helpMenu_about.setGraphic(imageUtil.getResourceIconImage("actions/about_sm.png"));
+
+		// populate help menu
+		helpMenu.getItems().addAll(
+				helpMenu_about
+		);
+
 	}
 
 }

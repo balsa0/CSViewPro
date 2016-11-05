@@ -215,15 +215,10 @@ public class CsvParserService {
 			long dateCount = 0;
 
 			// the minimum required detections
-			long minimumLevel = (NumberUtils.min(data.size(),100)) / 2;
-
-			int rowCount = 0;
+			long minimumLevel = data.size() - 1;
 
 			// iterate over rows
 			for (String[] row : data){
-
-				if(rowCount++ > 100)
-					break;
 
 				// get cell
 				String cell = row[i];

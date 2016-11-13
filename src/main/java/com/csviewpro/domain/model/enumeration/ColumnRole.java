@@ -5,11 +5,20 @@ package com.csviewpro.domain.model.enumeration;
  */
 public enum ColumnRole {
 
-	XCOORDINATE,
-	YCOORDINATE,
-	ZCOORDINATE,
-	POINTNAME,
-	POINTCODE,
-	OTHER
+	XCOORDINATE("X"),
+	YCOORDINATE("Y"),
+	ZCOORDINATE("Z"),
+	POINTNAME("PontNév"),
+	POINTCODE("PontKód"),
+	OTHER("Egyéb");
 
+	private final String defaultTitle;
+
+	ColumnRole(String defaultTitle) {
+		this.defaultTitle = defaultTitle;
+	}
+
+	public String getDefaultTitle() {
+		return defaultTitle;
+	}
 }

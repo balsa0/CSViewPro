@@ -17,41 +17,19 @@ public class DataSet implements Serializable{
 	@JsonProperty
 	private HeaderDescriptor headerDescriptor;
 
-	// geodetic system metadata
-	@JsonProperty
-	private GeodeticSystem geodeticSystem;
-
 	// points data
 	@JsonProperty
 	private List<GeoPoint> points;
 
-	/**
-	 * This constructor creates an empty data set.
-	 */
-	public DataSet() {
-		this(new HeaderDescriptor(), new ArrayList<>());
-	}
-
-	/**
-	 * This constructor creates a data set with EOV geodetic system.
-	 * @param headerDescriptor the header descriptor metadata.
-	 * @param points the points to store.
-	 */
-	public DataSet(HeaderDescriptor headerDescriptor, List<GeoPoint> points) {
-		// using eov as default geodetic system
-		this(headerDescriptor, points, GeodeticSystem.EOV);
-	}
 
 	/**
 	 * This constructor creates a data set.
 	 * @param headerDescriptor the header descriptor metadata.
 	 * @param points the points to store.
-	 * @param geodeticSystem the geodetic system descriptor.
 	 */
-	public DataSet(HeaderDescriptor headerDescriptor, List<GeoPoint> points, GeodeticSystem geodeticSystem) {
+	public DataSet(HeaderDescriptor headerDescriptor, List<GeoPoint> points) {
 		this.headerDescriptor = headerDescriptor;
 		this.points = points;
-		this.geodeticSystem = geodeticSystem;
 	}
 
 

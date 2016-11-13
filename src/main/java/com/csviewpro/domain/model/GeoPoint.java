@@ -29,6 +29,15 @@ public class GeoPoint implements Serializable {
 	@JsonProperty("valueMap")
 	private Map<Integer, Object> additional = new HashMap<>();
 
+	public GeoPoint() {
+	}
+
+	public GeoPoint(Double xCoo, Double yCoo, Double zCoo) {
+		this.xCoo = xCoo;
+		this.yCoo = yCoo;
+		this.zCoo = zCoo;
+	}
+
 	public String getName() {
 		return name;
 	}

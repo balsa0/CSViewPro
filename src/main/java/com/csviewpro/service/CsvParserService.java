@@ -1,8 +1,13 @@
 package com.csviewpro.service;
 
 import com.csviewpro.domain.exception.FileLoadingException;
+import com.csviewpro.domain.model.ColumnDescriptor;
+import com.csviewpro.domain.model.DataSet;
+import com.csviewpro.domain.model.GeoPoint;
+import com.csviewpro.domain.model.HeaderDescriptor;
 import com.csviewpro.domain.model.enumeration.ColumnRole;
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
+import com.google.common.collect.BiMap;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.lang3.StringUtils;
@@ -83,6 +88,15 @@ public class CsvParserService {
 		List<Object[]> data = convertTypes(preProcessed, columnTypes);
 
 		log.info("Type conversion finished");
+
+		// analyze header information
+		HeaderDescriptor headerDescriptor = analyzeHeader(data, columnTypes, header, numberFormatLocale);
+
+		log.info("Header descriptor created: " + headerDescriptor);
+
+		DataSet loadedDataSet = assembleDataset(headerDescriptor, data);
+
+		log.info("DataSet assembled");
 
 	}
 
@@ -254,18 +268,38 @@ public class CsvParserService {
 	}
 
 
-
-	public Map<Integer, ColumnRole> detectColumnRoles(List<String[]> data, Map<Integer, Class> columnTypes) {
+	/**
+	 * Analyses the content of the file and creates header descriptor based on the data.
+	 * @param data the content to process.
+	 * @param columnTypes the detected column types.
+	 * @param header the detected header titles.
+	 * @param numberFormat the detected number format.
+	 * @return
+	 */
+	public HeaderDescriptor analyzeHeader(
+			List<Object[]> data,
+			Map<Integer, Class> columnTypes,
+			List<String> header,
+			Locale numberFormat
+	) {
 
 		// regex patterns
 		Pattern pNamePattern = Pattern.compile("^[A-z]{0,2}[0-9]{1,5}$");
-		Pattern pCodePattern = Pattern.compile("^([A-z]?[0-9]{1,2})$");
+		Pattern pCodePattern = Pattern.compile("^([A-z]|[0-9]{1,2})$");
 
 		// collect geodetic systems to a list
 		List<GeodeticSystem> geodeticSystems = Arrays.asList(GeodeticSystem.values());
 
-		// create map for storing result
-		Map<Integer, ColumnRole> result = new HashMap<>();
+		// create map for storing roles
+		Set<ColumnRole> takenRoles = new HashSet<>();
+
+		// map for calculating geodetic system
+		Map<GeodeticSystem, Long> geodeticSystemMatchMap = geodeticSystems
+				.stream()
+				.collect(Collectors.toMap(entry -> entry, entry -> 0l));
+
+		// descriptor data
+		Map<Integer, ColumnDescriptor> descriptorData = new HashMap<>();
 
 		// iterate over columns
 		for(int i = 0; i < data.get(0).length; i++) {
@@ -281,25 +315,261 @@ public class CsvParserService {
 			long pZCount = 0;
 			long unknownCount = 0;
 
+			Set<String> pCodeBag = new HashSet<>();
+
 			// iterate over rows
-			for (String[] row : data) {
+			for (Object[] row : data) {
+
+				// skip empty rows
+				if(row.length == 0)
+					break;
 
 				// get cell
-				String cell = row[i];
+				Object cell = row[i];
 
 				// skip if cell is empty or null
-				if (null == cell || cell.isEmpty())
+				if (null == cell)
 					continue;
 
+				// only check geodetic system for numeric columns
+				if(columnClass == Double.class){
 
+					// cast object to number
+					Number act = (Number) cell;
 
+					// iterate trough geodetic systems
+					for(GeodeticSystem geodeticSystem : geodeticSystems){
+
+						// check for X coordinate
+						if(act.doubleValue() >= geodeticSystem.getxMin() &&
+								act.doubleValue() <= geodeticSystem.getxMax()){
+							pXCount++;
+							// count the geodetic system
+							geodeticSystemMatchMap.replace(
+									geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
+							);
+						}
+
+						// check for Y coordinate
+						if(act.doubleValue() >= geodeticSystem.getyMin() &&
+								act.doubleValue() <= geodeticSystem.getyMax()){
+							pYCount++;
+							// count the geodetic system
+							geodeticSystemMatchMap.replace(
+									geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
+							);
+						}
+
+						// check for relative Z coordinate
+						if(act.doubleValue() >= -50.0 &&
+								act.doubleValue() <= 50.0){
+							pZCount++;
+						}
+
+						// check for absolute Z coordinate
+						if(act.doubleValue() >= geodeticSystem.getzMin() &&
+								act.doubleValue() <= geodeticSystem.getzMax()){
+							pZCount++;
+							// count the geodetic system
+							geodeticSystemMatchMap.replace(
+									geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
+							);
+						}
+					}
+
+				}else if(columnClass == String.class || columnClass == Long.class){
+
+					// cast object to string
+					String act = cell.toString();
+
+					// ignore cell if string is empty
+					if("".equals(act))
+						continue;
+
+					boolean match = false;
+
+					// check for point name
+					if(pNamePattern.matcher(act).find()){
+						pNameCount++;
+						match = true;
+					}
+
+					// check pCodeBag count
+					Integer pcodeBagSize = pCodeBag.size();
+
+					// add item to pCode bag
+					pCodeBag.add(act);
+
+					// check for point code
+					// if no value has been inserted, value is possibly a point code
+					if(pCodePattern.matcher(act).find() || pcodeBagSize == pCodeBag.size()){
+						pCodeCount++;
+						match = true;
+					}
+
+					// no match
+					if(!match)
+						unknownCount++;
+
+				}else{
+					unknownCount++;
+				}
 			}
+
+			// create new list for storing possible roles
+			List<Long> activeList = new ArrayList<>();
+
+			// check if specific roles have been taken
+			if(!takenRoles.contains(ColumnRole.POINTNAME))
+				activeList.add(pNameCount);
+			if(!takenRoles.contains(ColumnRole.POINTCODE))
+				activeList.add(pCodeCount);
+			if(!takenRoles.contains(ColumnRole.XCOORDINATE))
+				activeList.add(pXCount);
+			if(!takenRoles.contains(ColumnRole.YCOORDINATE))
+				activeList.add(pYCount);
+			if(!takenRoles.contains(ColumnRole.ZCOORDINATE))
+				activeList.add(pZCount);
+			activeList.add(unknownCount);
+
+			// evaluate results
+			Long max = Arrays.asList(
+				pNameCount,
+				pCodeCount,
+				pXCount,
+				pYCount,
+				pZCount,
+				unknownCount)
+					.stream()
+					.max(Long::compareTo)
+					.get();
+
+			// get header title for column
+			String title = null;
+			try {
+				title = header.get(i);
+			}catch(IndexOutOfBoundsException e){/*Ignore*/}
+
+			// column is point name
+			if(max == pNameCount && !takenRoles.contains(ColumnRole.POINTNAME)){
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.POINTNAME));
+				takenRoles.add(ColumnRole.POINTNAME);
+			// column is a point code
+			}else if(max == pCodeCount && !takenRoles.contains(ColumnRole.POINTCODE)){
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.POINTCODE));
+				takenRoles.add(ColumnRole.POINTCODE);
+			// column is a X coordinate
+			}else if(max == pXCount && !takenRoles.contains(ColumnRole.XCOORDINATE)){
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.XCOORDINATE));
+				takenRoles.add(ColumnRole.XCOORDINATE);
+			// column is a Y coordinate
+			}else if(max == pYCount && !takenRoles.contains(ColumnRole.YCOORDINATE)){
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.YCOORDINATE));
+				takenRoles.add(ColumnRole.YCOORDINATE);
+			// column is a Z coordinate
+			}else if(max == pZCount && !takenRoles.contains(ColumnRole.ZCOORDINATE)){
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.ZCOORDINATE));
+				takenRoles.add(ColumnRole.ZCOORDINATE);
+			// column is unknown
+			}else{
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.OTHER));
+			}
+
 		}
 
+		// detect geodetic system
+		GeodeticSystem detected = null;
 
+		Long maxMatch = geodeticSystemMatchMap.values()
+				.stream()
+				.max(Long::compareTo)
+				.get();
 
-		return null;
+		// check witch one is detected
+		for(GeodeticSystem system : geodeticSystems){
+
+			// check if it equals max
+			if(maxMatch == geodeticSystemMatchMap.get(system)){
+				detected = system;
+				break;
+			}
+
+		}
+
+		// assembling header descriptor
+		return new HeaderDescriptor(descriptorData, detected, numberFormat);
 	}
+
+	/**
+	 * Creates a data set from a headerDescriptor and a list of arrays.
+	 * @param headerDescriptor the {@link HeaderDescriptor} that stores header data.
+	 * @param data the data to use.
+	 * @return a new {@link DataSet} from data and headerDescriptor.
+	 */
+	public DataSet assembleDataset(HeaderDescriptor headerDescriptor, List<Object[]> data){
+
+		// create empty list for the points
+		List<GeoPoint> pointList = new LinkedList<>();
+
+		// reverse lookup map
+		Map<ColumnRole, Integer> lookupMap = headerDescriptor
+				.getDescriptorData().entrySet()
+				.stream()
+				// exclude other roles
+				.filter(e -> e.getValue().getRole() != ColumnRole.OTHER)
+				.collect(Collectors.toMap(
+						e -> e.getValue().getRole(),
+						e -> e.getKey()
+				));
+
+		// check if coordinates are available
+		if(lookupMap.get(ColumnRole.XCOORDINATE) == null || lookupMap.get(ColumnRole.YCOORDINATE) == null) {
+			log.error("X or Y coords are not defined.");
+			throw new FileLoadingException("Az X vagy Y koordináta nem felismerhető.");
+		}
+
+		Integer xCol = lookupMap.get(ColumnRole.XCOORDINATE);
+		Integer yCol = lookupMap.get(ColumnRole.YCOORDINATE);
+		Integer zCol = lookupMap.get(ColumnRole.ZCOORDINATE);
+		Integer nCol = lookupMap.get(ColumnRole.POINTNAME);
+		Integer cCol = lookupMap.get(ColumnRole.POINTCODE);
+
+		for(Object[] row : data){
+
+			// skip if row is empty
+			if(row.length == 0)
+				continue;
+
+			// create new geo point
+			GeoPoint point = new GeoPoint();
+
+			// try to parse coordinates
+			try{
+				// x and y coords
+				point.setxCoo((Double) row[xCol]);
+				point.setyCoo((Double) row[yCol]);
+
+				// other optional coordinates
+				if(zCol != null && row[zCol] != null)
+					point.setzCoo((Double) row[zCol]);
+				if(nCol != null && row[nCol] != null)
+					point.setName(String.valueOf(row[nCol]));
+				if(cCol != null && row[cCol] != null)
+					point.setCode(String.valueOf(row[cCol]));
+
+
+			}catch (Exception e){
+				throw new FileLoadingException("Could not load coordinates for row: "+row);
+			}
+
+			// add point to the list
+			pointList.add(point);
+
+		}
+
+		return new DataSet(headerDescriptor, pointList);
+	}
+
 
 	/**
 	 * This function converts data set of strings to the given types.

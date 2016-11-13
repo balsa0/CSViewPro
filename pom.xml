@@ -145,11 +145,11 @@
 		<!--natty date parser-->
 		<!--http://natty.joestelmach.com/-->
 		<!--https://github.com/joestelmach/natty-->
-		<dependency>
-			<groupId>com.joestelmach</groupId>
-			<artifactId>natty</artifactId>
-			<version>0.11</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.joestelmach</groupId>-->
+			<!--<artifactId>natty</artifactId>-->
+			<!--<version>0.11</version>-->
+		<!--</dependency>-->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>

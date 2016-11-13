@@ -1,6 +1,5 @@
 package com.csviewpro.config;
 
-import com.csviewpro.domain.conversion.DateConverter;
 import com.csviewpro.domain.conversion.DoubleConverter;
 import com.csviewpro.domain.conversion.LongConverter;
 import com.csviewpro.domain.conversion.StringConverter;
@@ -25,7 +24,6 @@ public class ConverterConfiguration {
 		typeConverterService.registerConverter(String.class, new StringConverter());
 		typeConverterService.registerConverter(Long.class, new LongConverter());
 		typeConverterService.registerConverter(Double.class, new DoubleConverter());
-		typeConverterService.registerConverter(Date.class, new DateConverter());
 	}
 
 }

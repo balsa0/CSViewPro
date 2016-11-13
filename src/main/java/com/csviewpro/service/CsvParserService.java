@@ -1,8 +1,8 @@
 package com.csviewpro.service;
 
 import com.csviewpro.domain.exception.FileLoadingException;
-import com.joestelmach.natty.DateGroup;
-import com.joestelmach.natty.Parser;
+import com.csviewpro.domain.model.enumeration.ColumnRole;
+import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.lang3.StringUtils;
@@ -198,21 +198,15 @@ public class CsvParserService {
 		// create type map
 		Map<Integer, Class> resolvedTypes = new HashMap<>();
 
-		// regex patterns pattern
+		// regex patterns
 		Pattern longPattern = Pattern.compile("^[0-9]+$");
 		Pattern doublePattern = Pattern.compile("^[0-9]+([,.][0-9]+)$");
-		Pattern dateConstraint1Pattern = Pattern.compile("[-/:]");
-		Pattern dateConstraint2Pattern = Pattern.compile("[0-9]");
-
-		// natty date parser
-		Parser dateParser = new Parser();
 
 		// iterate over columns
 		for(int i = 0; i < data.get(0).length; i++){
 
 			long doubleCount = 0;
 			long longCount = 0;
-			long dateCount = 0;
 
 			// the minimum required detections
 			long minimumLevel = data.size() - 1;
@@ -233,71 +227,21 @@ public class CsvParserService {
 				// check for long
 				}else if(longPattern.matcher(cell).find()){
 					longCount++;
-				// check others
-				}else{
-
-					// ensure minimum length before checking date
-					if(cell.length() < 9)
-						continue;
-
-					// check date constraint 1
-					long dateMatch1 = 0;
-					Matcher dateMatcher1 = dateConstraint1Pattern.matcher(cell);
-
-					while (dateMatcher1.find())
-						dateMatch1++;
-
-					if(dateMatch1 < 3)
-						continue;
-
-					// check date constraint 2
-					long dateMatch2 = 0;
-					Matcher dateMatcher2 = dateConstraint2Pattern.matcher(cell);
-
-					while (dateMatcher2.find())
-						dateMatch2++;
-
-					if(dateMatch2 < 6)
-						continue;
-
-					// check for date
-					try{
-						List<DateGroup> groups = dateParser.parse(cell);
-						// if date has been resolved as groups
-						if(groups.size() > 0){
-							for(DateGroup group : groups){
-								// skip if date is recurring.
-								if(group.isRecurring())
-									continue;
-								// check if dates are in the past
-								for(Date date : group.getDates())
-									if(!date.before(new Date()))
-										throw new RuntimeException("skip to catch");
-							}
-							dateCount++;
-						}
-					}catch (Exception e){}
 				}
 			}
 
 			// evaluate results for column
-			if(doubleCount == NumberUtils.max(doubleCount, longCount, dateCount)
+			if(doubleCount == NumberUtils.max(doubleCount, longCount)
 					&& doubleCount >= minimumLevel
 			){
 				// resolved type is double
 				resolvedTypes.put(i, Double.class);
 
-			}else if(longCount == NumberUtils.max(doubleCount, longCount, dateCount)
+			}else if(longCount == NumberUtils.max(doubleCount, longCount)
 					&& longCount >= minimumLevel
 			){
 				// resolved type is long
 				resolvedTypes.put(i, Long.class);
-
-			}else if(dateCount == NumberUtils.max(doubleCount, longCount, dateCount)
-					&& dateCount >= minimumLevel
-			){
-				// resolved type is date
-				resolvedTypes.put(i, Date.class);
 
 			}else{
 				// resolved type is a generic string
@@ -307,7 +251,54 @@ public class CsvParserService {
 		}
 
 		return resolvedTypes;
+	}
 
+
+
+	public Map<Integer, ColumnRole> detectColumnRoles(List<String[]> data, Map<Integer, Class> columnTypes) {
+
+		// regex patterns
+		Pattern pNamePattern = Pattern.compile("^[A-z]{0,2}[0-9]{1,5}$");
+		Pattern pCodePattern = Pattern.compile("^([A-z]?[0-9]{1,2})$");
+
+		// collect geodetic systems to a list
+		List<GeodeticSystem> geodeticSystems = Arrays.asList(GeodeticSystem.values());
+
+		// create map for storing result
+		Map<Integer, ColumnRole> result = new HashMap<>();
+
+		// iterate over columns
+		for(int i = 0; i < data.get(0).length; i++) {
+
+			// get column class from map
+			Class columnClass = columnTypes.get(i);
+
+			// reset counts
+			long pNameCount = 0;
+			long pCodeCount = 0;
+			long pXCount = 0;
+			long pYCount = 0;
+			long pZCount = 0;
+			long unknownCount = 0;
+
+			// iterate over rows
+			for (String[] row : data) {
+
+				// get cell
+				String cell = row[i];
+
+				// skip if cell is empty or null
+				if (null == cell || cell.isEmpty())
+					continue;
+
+
+
+			}
+		}
+
+
+
+		return null;
 	}
 
 	/**
@@ -320,7 +311,7 @@ public class CsvParserService {
 
 		List<Object[]> result = new ArrayList<>();
 
-		// perse every row
+		// parse every row
 		for (String[] row : data){
 			result.add(convertRowTypes(row, columnTypes));
 		}

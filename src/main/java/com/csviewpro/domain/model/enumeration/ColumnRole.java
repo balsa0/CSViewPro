@@ -10,7 +10,6 @@ public enum ColumnRole {
 	ZCOORDINATE,
 	POINTNAME,
 	POINTCODE,
-	DATE,
 	OTHER
 
 }

@@ -1,10 +1,8 @@
 package com.csviewpro.domain.model;
 
-import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +29,5 @@ public class DataSet implements Serializable{
 		this.headerDescriptor = headerDescriptor;
 		this.points = points;
 	}
-
 
 }

@@ -138,6 +138,20 @@ public class LoadController {
 				tableGridController.rebuildTable();
 			});
 
+			loaderTask.setOnFailed(event -> {
+				if(loaderTask.getException() != null){
+					// hide loader bar
+					notificationsController.hide();
+					// show alert
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Nem sikerült megnyitni a fájlt");
+					alert.setHeaderText(file.getName());
+					alert.setContentText("Hiba lépett fel a fájl megnyitása közben:\r\n"
+							+ loaderTask.getException().getLocalizedMessage());
+					alert.show();
+				}
+			});
+
 		}catch (Exception e){
 
 			// log the error message
@@ -146,9 +160,9 @@ public class LoadController {
 			// show alert
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Nem sikerült megnyitni a fájlt");
-			alert.setHeaderText(null);
-			alert.setContentText("Hiba lépett fel a fájl megnyitása közben: "+file.getAbsolutePath()+"" +
-					"\r\n"+e.getLocalizedMessage());
+			alert.setHeaderText(file.getName());
+			alert.setContentText("Hiba lépett fel a fájl megnyitása közben:\r\n"
+					+ e.getLocalizedMessage());
 			alert.show();
 
 		}/*finally {

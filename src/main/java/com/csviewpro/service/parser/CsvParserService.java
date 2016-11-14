@@ -1,4 +1,4 @@
-package com.csviewpro.service;
+package com.csviewpro.service.parser;
 
 import com.csviewpro.domain.exception.FileLoadingException;
 import com.csviewpro.domain.model.ColumnDescriptor;
@@ -7,7 +7,6 @@ import com.csviewpro.domain.model.GeoPoint;
 import com.csviewpro.domain.model.HeaderDescriptor;
 import com.csviewpro.domain.model.enumeration.ColumnRole;
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
-import com.google.common.collect.BiMap;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Created by Balsa on 2016. 10. 19..
+ * This service is responsible for loading and automatically parsing files to data sets.
  */
 @Service
 public class CsvParserService {
@@ -32,16 +31,16 @@ public class CsvParserService {
 	private final static Logger log = Logger.getLogger(CsvParserService.class);
 
 	@Autowired
-	TypeConverterService typeConverterService;
+	private TypeConverterService typeConverterService;
 
 	/**
 	 * Loads and processes a given file.
 	 * @param file the file to load and process.
 	 */
-	public void loadFile(File file){
+	public DataSet parseFile(File file){
 
 		// log entry
-		log.info("Loading file: " + file.getAbsolutePath());
+		log.info("Parsing file: " + file.getAbsolutePath());
 
 		// first read an pre-process the file
 		List<String[]> preProcessed = this.readAndPreProcess(file);
@@ -50,7 +49,7 @@ public class CsvParserService {
 		if(preProcessed.size() == 0 )
 			throw new FileLoadingException("A megnyitni kívánt fájl üres (0 sort tartalmaz).");
 
-		log.info("Detected columns: " + preProcessed.get(0).length + ", rows: " + preProcessed.size() + ".");
+		log.debug("Detected columns: " + preProcessed.get(0).length + ", rows: " + preProcessed.size() + ".");
 
 		// then check if first row is the header
 		boolean firstRowContainsHeader = isHeader(preProcessed.get(0));
@@ -63,19 +62,19 @@ public class CsvParserService {
 			header = new ArrayList<>();
 
 		// display detected header
-		log.info("Detected header: " + (header.size() == 0 ? "no header" : StringUtils.join(header,",")) + ".");
+		log.debug("Detected header: " + (header.size() == 0 ? "no header" : StringUtils.join(header,",")) + ".");
 
 		// detect number format
 		Locale numberFormatLocale = detectDecimalFormatLocale(preProcessed);
 
 		// display detected locale
-		log.info("Detected number format (locale): " + numberFormatLocale);
+		log.debug("Detected number format (locale): " + numberFormatLocale);
 
 		// detect types
 		Map<Integer, Class> columnTypes = getColumnTypes(preProcessed);
 
 		// display detected types
-		log.info("Detected column type: " +
+		log.debug("Detected column type: " +
 				StringUtils.join(
 						columnTypes.values()
 								.stream()
@@ -87,16 +86,15 @@ public class CsvParserService {
 		// convert types of the data set
 		List<Object[]> data = convertTypes(preProcessed, columnTypes);
 
-		log.info("Type conversion finished");
+		log.debug("Type parser finished");
 
 		// analyze header information
 		HeaderDescriptor headerDescriptor = analyzeHeader(data, columnTypes, header, numberFormatLocale);
 
-		log.info("Header descriptor created: " + headerDescriptor);
+		log.debug("Header descriptor created: " + headerDescriptor);
 
-		DataSet loadedDataSet = assembleDataset(headerDescriptor, data);
-
-		log.info("DataSet assembled");
+		// assemble the data set
+		return assembleDataSet(headerDescriptor, data);
 
 	}
 
@@ -162,7 +160,7 @@ public class CsvParserService {
 	 * @param data the dataSet.
 	 * @return returns a {@link Locale} based on the number format of dataset.
 	 */
-	public Locale detectDecimalFormatLocale(List<String[]> data){
+	private Locale detectDecimalFormatLocale(List<String[]> data){
 
 		Pattern periodPattern = Pattern.compile("[0-9][.][0-9]");
 		Pattern commaPattern = Pattern.compile("[0-9][,][0-9]");
@@ -207,7 +205,7 @@ public class CsvParserService {
 	 * @return map of column types in the following format (Index, Type).43
 	 * 0
 	 */
-	public Map<Integer, Class> getColumnTypes(List<String[]> data){
+	private Map<Integer, Class> getColumnTypes(List<String[]> data){
 
 		// create type map
 		Map<Integer, Class> resolvedTypes = new HashMap<>();
@@ -276,7 +274,7 @@ public class CsvParserService {
 	 * @param numberFormat the detected number format.
 	 * @return
 	 */
-	public HeaderDescriptor analyzeHeader(
+	private HeaderDescriptor analyzeHeader(
 			List<Object[]> data,
 			Map<Integer, Class> columnTypes,
 			List<String> header,
@@ -506,7 +504,7 @@ public class CsvParserService {
 	 * @param data the data to use.
 	 * @return a new {@link DataSet} from data and headerDescriptor.
 	 */
-	public DataSet assembleDataset(HeaderDescriptor headerDescriptor, List<Object[]> data){
+	private DataSet assembleDataSet(HeaderDescriptor headerDescriptor, List<Object[]> data){
 
 		// create empty list for the points
 		List<GeoPoint> pointList = new LinkedList<>();

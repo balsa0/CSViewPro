@@ -19,7 +19,6 @@ public class DataSet implements Serializable{
 	@JsonProperty
 	private List<GeoPoint> points;
 
-
 	/**
 	 * This constructor creates a data set.
 	 * @param headerDescriptor the header descriptor metadata.
@@ -30,4 +29,19 @@ public class DataSet implements Serializable{
 		this.points = points;
 	}
 
+	public HeaderDescriptor getHeaderDescriptor() {
+		return headerDescriptor;
+	}
+
+	public void setHeaderDescriptor(HeaderDescriptor headerDescriptor) {
+		this.headerDescriptor = headerDescriptor;
+	}
+
+	public List<GeoPoint> getPoints() {
+		return points;
+	}
+
+	public void setPoints(List<GeoPoint> points) {
+		this.points = points;
+	}
 }

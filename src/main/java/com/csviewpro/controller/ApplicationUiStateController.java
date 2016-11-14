@@ -1,6 +1,7 @@
 package com.csviewpro.controller;
 
 import com.csviewpro.ApplicationInitializer;
+import com.csviewpro.ui.menu.MainMenuBar;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -28,6 +29,9 @@ public class ApplicationUiStateController {
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	@Autowired
+	private MainMenuBar mainMenuBar;
+
 	// set default state as filehistory state
 	private UiState activeState = UiState.STATE_FILEHISTORY;
 
@@ -44,6 +48,9 @@ public class ApplicationUiStateController {
 	 * @param activeState the new state of the application.
 	 */
 	private void setActiveState(UiState activeState) {
+		// adjust menus according to the new status
+		mainMenuBar.activateMenuState(activeState);
+		// set the property
 		this.activeState = activeState;
 	}
 

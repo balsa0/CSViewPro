@@ -4,7 +4,8 @@ import com.csviewpro.controller.ApplicationUiStateController;
 import com.csviewpro.controller.NotificationsController;
 import com.csviewpro.controller.TableGridController;
 import com.csviewpro.domain.ApplicationPreferences;
-import com.csviewpro.service.CsvParserService;
+import com.csviewpro.service.FileLoaderService;
+import com.csviewpro.service.parser.CsvParserService;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
@@ -35,7 +36,7 @@ public class LoadController {
 	private FileHistoryController fileHistoryController;
 
 	@Autowired
-	private CsvParserService csvParserService;
+	private FileLoaderService fileLoaderService;
 
 	@Autowired
 	private NotificationsController notificationsController;
@@ -54,6 +55,9 @@ public class LoadController {
 		loadPreferences = Preferences.userNodeForPackage(LoadController.class);
 	}
 
+	/**
+	 * This is the action for opening file choosers.
+	 */
 	public void openFileChooserAction(){
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open CSV File");
@@ -121,7 +125,7 @@ public class LoadController {
 				@Override
 				protected Void call() throws Exception {
 					// service call
-					csvParserService.loadFile(file);
+					fileLoaderService.loadFile(file);
 
 					return null;
 				}
@@ -140,6 +144,8 @@ public class LoadController {
 
 			loaderTask.setOnFailed(event -> {
 				if(loaderTask.getException() != null){
+					// unload everything
+					this.closeFileAction();
 					// hide loader bar
 					notificationsController.hide();
 					// show alert
@@ -154,6 +160,11 @@ public class LoadController {
 
 		}catch (Exception e){
 
+			// unload everything
+			this.closeFileAction();
+			// hide loader bar
+			notificationsController.hide();
+
 			// log the error message
 			log.error("There was an error during loading file: "+file.getAbsolutePath(),e);
 
@@ -165,13 +176,22 @@ public class LoadController {
 					+ e.getLocalizedMessage());
 			alert.show();
 
-		}/*finally {
-			// hide modal
-			//notificationsController.hide();
+		}
+	}
 
-		}*/
+	/**
+	 * This action is responsible for closing active file.
+	 */
+	public void closeFileAction(){
 
+		// unload file in service
+		fileLoaderService.unloadFile();
 
+		// set the UI state to original
+		uiStateController.activateFileHistoryState();
+
+		// remove everything from table grid
+		tableGridController.clearTable();
 	}
 
 }

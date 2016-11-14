@@ -3,12 +3,11 @@ package com.csviewpro.config;
 import com.csviewpro.domain.conversion.DoubleConverter;
 import com.csviewpro.domain.conversion.LongConverter;
 import com.csviewpro.domain.conversion.StringConverter;
-import com.csviewpro.service.TypeConverterService;
+import com.csviewpro.service.parser.TypeConverterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
-import java.util.Date;
 
 /**
  * Created by Balsa on 2016. 10. 15..

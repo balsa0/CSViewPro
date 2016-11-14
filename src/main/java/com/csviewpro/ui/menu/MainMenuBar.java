@@ -1,5 +1,6 @@
 package com.csviewpro.ui.menu;
 
+import com.csviewpro.controller.ApplicationUiStateController;
 import com.csviewpro.controller.filehandling.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import javafx.scene.control.Menu;
@@ -34,6 +35,7 @@ public class MainMenuBar extends MenuBar {
 	// file
 	private Menu fileMenu = new Menu("Fájl");
 	private MenuItem fileMenu_open = new MenuItem("Megnyitás...");
+	private MenuItem fileMenu_close = new MenuItem("Fájl bezárása");
 	private MenuItem fileMenu_exit = new MenuItem("Kilépés");
 
 	// help
@@ -62,7 +64,15 @@ public class MainMenuBar extends MenuBar {
 		});
 		fileMenu_open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
 
+		// close file item
+		fileMenu_close.setDisable(true);
+		fileMenu_close.setGraphic(imageUtil.getResourceIconImage("actions/close_sm.png"));
+		fileMenu_close.setOnAction(event -> {
+			loadController.closeFileAction();
+		});
+
 		// exit menu item
+		fileMenu_exit.setGraphic(imageUtil.getResourceIconImage("actions/exit_sm.png"));
 		fileMenu_exit.setOnAction(event -> {
 			applicationContext.getBean(Stage.class).close();
 		});
@@ -70,6 +80,8 @@ public class MainMenuBar extends MenuBar {
 		// populate file menu
 		fileMenu.getItems().addAll(
 				fileMenu_open,
+				new SeparatorMenuItem(),
+				fileMenu_close,
 				new SeparatorMenuItem(),
 				fileMenu_exit
 		);
@@ -83,7 +95,30 @@ public class MainMenuBar extends MenuBar {
 		helpMenu.getItems().addAll(
 				helpMenu_about
 		);
+	}
 
+	/**
+	 * This method adjusts menu items according to the current ui state.
+	 * @param uiState
+	 */
+	public void activateMenuState(ApplicationUiStateController.UiState uiState){
+
+		// file history
+		switch (uiState){
+			case STATE_FILEHISTORY:
+				// disable close file menu
+				fileMenu_close.setDisable(true);
+
+				break;
+			case STATE_FILE_OPEN:
+				// enable close file menu
+				fileMenu_close.setDisable(false);
+
+				break;
+
+			default:
+				return;
+		}
 	}
 
 }

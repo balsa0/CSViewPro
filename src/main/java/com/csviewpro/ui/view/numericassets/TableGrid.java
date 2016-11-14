@@ -1,5 +1,6 @@
 package com.csviewpro.ui.view.numericassets;
 
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ public class TableGrid extends TableView{
 
 	public void setupProperties(){
 		setEditable(true);
+		getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	}
 
 }

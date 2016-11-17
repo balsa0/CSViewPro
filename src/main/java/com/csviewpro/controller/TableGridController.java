@@ -5,8 +5,13 @@ import com.csviewpro.domain.model.GeoPoint;
 import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.view.numericassets.TableGrid;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.LongStringConverter;
+import javafx.util.converter.NumberStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -66,23 +71,53 @@ public class TableGridController {
 		// create a new column
 		TableColumn column = new TableColumn<GeoPoint, Object>(descriptor.getName());
 
+		// cell factory
+		if(descriptor.getType().equals(Double.class))
+			column.setCellFactory(TextFieldTableCell.<GeoPoint, Double>forTableColumn(new DoubleStringConverter()));
+		else if(descriptor.getType().equals(Long.class))
+			column.setCellFactory(TextFieldTableCell.<GeoPoint, Long>forTableColumn(new LongStringConverter()));
+		else
+			column.setCellFactory(TextFieldTableCell.<GeoPoint>forTableColumn());
+
+
+		// cell value factory
 		column.setCellValueFactory(param -> {
 			TableColumn.CellDataFeatures<GeoPoint, Object> p = (TableColumn.CellDataFeatures<GeoPoint, Object>) param;
 			switch (descriptor.getRole()){
 				case XCOORDINATE:
+					column.setId("coo");
 					return new SimpleDoubleProperty(p.getValue().getxCoo() == null ? 0 : p.getValue().getxCoo());
 				case YCOORDINATE:
+					column.setId("coo");
 					return new SimpleDoubleProperty(p.getValue().getyCoo() == null ? 0 : p.getValue().getyCoo());
 				case ZCOORDINATE:
+					column.setId("coo");
 					return new SimpleDoubleProperty(p.getValue().getzCoo() == null ? 0 : p.getValue().getzCoo());
 				case POINTNAME:
+					column.setId("pname");
 					return new SimpleStringProperty(p.getValue().getName() == null ? "" : p.getValue().getName());
 				case POINTCODE:
 					return new SimpleStringProperty(p.getValue().getCode() == null ? "" : p.getValue().getCode());
 				default:
-					return new SimpleStringProperty("todo");
+					// get value of the cell
+					Object value = p.getValue().getAdditional().get(index);
+					if(value == null)
+						return new SimpleStringProperty("");
+					else if(descriptor.getClass().equals(String.class))
+						return new SimpleStringProperty((String) value);
+					else if(descriptor.getClass().equals(Long.class))
+						return new SimpleLongProperty((Long) value);
+					else if(descriptor.getClass().equals(Double.class))
+						return new SimpleDoubleProperty((Double) value);
+					else
+						return new SimpleStringProperty(value.toString());
+
 			}
 		});
+
+		column.setSortable(false);
+		column.setEditable(true);
+
 
 		return column;
 	}

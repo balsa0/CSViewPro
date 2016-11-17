@@ -77,4 +77,12 @@ public class GeoPoint implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
+
+	public Map<Integer, Object> getAdditional() {
+		return additional;
+	}
+
+	public void setAdditional(Map<Integer, Object> additional) {
+		this.additional = additional;
+	}
 }

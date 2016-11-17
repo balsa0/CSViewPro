@@ -1,0 +1,48 @@
+.table-row-cell{
+	-fx-background-color: #C5EAF3;
+}
+
+.table-row-cell:odd{
+	-fx-background-color: #FFFFFF;
+}
+
+.table-row-cell #pname{
+	-fx-background-color: #FF7578;
+}
+
+.table-row-cell:odd #pname{
+	-fx-background-color: #FFFFFF;
+}
+
+.table-row-cell #coo{
+	-fx-background-color: #8CD8E8;
+}
+
+.table-row-cell:odd #coo{
+	-fx-background-color: #FFFFFF;
+}
+
+.table-row-cell :selected {
+	-fx-background-color: #0096C9;
+}
+
+.table-row-cell #pname:selected{
+	-fx-background-color: #0096C9;
+}
+
+.table-row-cell #coo:selected{
+	-fx-background-color: #0096C9;
+}
+
+.text-field-table-cell {
+	-fx-padding: 0;
+	-fx-background-insets: 0.0;
+}
+
+.text-field-table-cell .text-field {
+	-fx-padding: 3 0 3 0;
+	-fx-background-insets: 0.0;
+	-fx-background-color: #FFFFFF;
+	-fx-border-radius: 0;
+	-fx-border-width: 0;
+}

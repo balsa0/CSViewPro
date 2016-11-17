@@ -11,6 +11,17 @@ public class MainScene extends Scene{
 
 	public MainScene(@NamedArg("root") Parent root) {
 		super(root);
+		setStyleSheets();
+	}
+
+	private void setStyleSheets(){
+		getStylesheets().addAll(
+				getStyleRef("tableview.css")
+		);
+	}
+
+	public String getStyleRef(String fileName){
+		return getClass().getClassLoader().getResource("styles/" + fileName).toExternalForm();
 	}
 
 }

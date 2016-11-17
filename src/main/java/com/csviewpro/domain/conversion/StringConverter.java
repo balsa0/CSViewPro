@@ -7,6 +7,8 @@ public class StringConverter implements TypeConverter<String>{
 
 	@Override
 	public String convert(String s) {
+		if(s == null || s.trim().isEmpty())
+			return "";
 		return s;
 	}
 }

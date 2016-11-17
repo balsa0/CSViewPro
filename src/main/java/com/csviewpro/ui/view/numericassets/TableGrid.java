@@ -12,6 +12,9 @@ import javax.annotation.PostConstruct;
 @Component
 public class TableGrid extends TableView{
 
+	/// TODO enable drag mouse selection:
+	/// https://community.oracle.com/thread/2621389
+
 	@PostConstruct
 	public void init(){
 		setupProperties();
@@ -19,7 +22,10 @@ public class TableGrid extends TableView{
 
 	public void setupProperties(){
 		setEditable(true);
+
 		getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		getSelectionModel().setCellSelectionEnabled(true);
+
 	}
 
 }

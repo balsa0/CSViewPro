@@ -393,14 +393,14 @@ public class CsvParserService {
 					}
 
 					// check pCodeBag count
-					Integer pcodeBagSize = pCodeBag.size();
+					Integer pCodeBagSize = pCodeBag.size();
 
 					// add item to pCode bag
 					pCodeBag.add(act);
 
 					// check for point code
 					// if no value has been inserted, value is possibly a point code
-					if(pCodePattern.matcher(act).find() || pcodeBagSize == pCodeBag.size()){
+					if(pCodePattern.matcher(act).find() || pCodeBagSize == pCodeBag.size()){
 						pCodeCount++;
 						match = true;
 					}
@@ -543,7 +543,7 @@ public class CsvParserService {
 
 			// try to parse coordinates
 			try{
-				// x and y coords
+				// x and y coordinates
 				point.setxCoo((Double) row[xCol]);
 				point.setyCoo((Double) row[yCol]);
 
@@ -555,6 +555,16 @@ public class CsvParserService {
 				if(cCol != null && row[cCol] != null)
 					point.setCode(String.valueOf(row[cCol]));
 
+				// create additional map
+				for(int i = 0; i < row.length; i++){
+					Object o = row[i];
+					// skip special values
+					if(i == xCol && i == yCol && i == zCol &&
+							i == nCol && i == cCol)
+						continue;
+					// add value to additional
+					point.getAdditional().put(i, o);
+				}
 
 			}catch (Exception e){
 				throw new FileLoadingException("Could not load coordinates for row: "+row);

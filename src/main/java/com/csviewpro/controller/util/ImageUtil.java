@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class ImageUtil {
 
 	public ImageView getResourceIconImage(String filename){
-		return getResourceIconImage(filename,16);
+		return getResourceIconImage(filename, 16);
 	}
 
 	public ImageView getResourceIconImage(String filename, double size){

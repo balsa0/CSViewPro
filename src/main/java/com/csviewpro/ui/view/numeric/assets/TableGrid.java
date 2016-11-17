@@ -1,4 +1,4 @@
-package com.csviewpro.ui.view.numericassets;
+package com.csviewpro.ui.view.numeric.assets;
 
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;

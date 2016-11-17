@@ -1,7 +1,7 @@
 package com.csviewpro.controller;
 
 import com.csviewpro.domain.model.GeoPoint;
-import com.csviewpro.ui.view.numericassets.TableGrid;
+import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

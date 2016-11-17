@@ -1,7 +1,7 @@
 package com.csviewpro.controller.filehandling;
 
 import com.csviewpro.domain.ApplicationPreferences;
-import com.csviewpro.ui.view.FileHistoryView;
+import com.csviewpro.ui.view.common.FileHistoryView;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

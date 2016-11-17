@@ -1,10 +1,6 @@
 package com.csviewpro.ui;
 
-import com.csviewpro.ui.menu.MainMenuBar;
-import com.csviewpro.ui.view.FileHistoryView;
-import javafx.geometry.Insets;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.NotificationPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

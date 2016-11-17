@@ -1,8 +1,8 @@
 package com.csviewpro.controller;
 
 import com.csviewpro.ui.MainLayout;
-import com.csviewpro.ui.view.FileHistoryView;
-import com.csviewpro.ui.view.NumericView;
+import com.csviewpro.ui.view.common.FileHistoryView;
+import com.csviewpro.ui.view.numeric.NumericView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 

@@ -1,4 +1,4 @@
-package com.csviewpro.ui.view.numericassets;
+package com.csviewpro.ui.view.numeric.assets;
 
 import org.controlsfx.control.StatusBar;
 import org.springframework.stereotype.Component;

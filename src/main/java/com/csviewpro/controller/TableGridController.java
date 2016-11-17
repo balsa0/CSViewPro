@@ -4,7 +4,7 @@ import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.GeoPoint;
 import com.csviewpro.service.WorkspaceDataService;
-import com.csviewpro.ui.view.numericassets.TableGrid;
+import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;

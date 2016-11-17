@@ -1,8 +1,8 @@
-package com.csviewpro.ui.view;
+package com.csviewpro.ui.view.numeric;
 
 import com.csviewpro.ui.toolbar.MainToolBar;
-import com.csviewpro.ui.view.numericassets.NumericViewStatusBar;
-import com.csviewpro.ui.view.numericassets.TableGrid;
+import com.csviewpro.ui.view.numeric.assets.NumericViewStatusBar;
+import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import javafx.scene.layout.BorderPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

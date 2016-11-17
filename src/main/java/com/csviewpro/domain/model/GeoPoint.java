@@ -1,6 +1,8 @@
 package com.csviewpro.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -84,5 +86,35 @@ public class GeoPoint implements Serializable {
 
 	public void setAdditional(Map<Integer, Object> additional) {
 		this.additional = additional;
+	}
+
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this)
+				.add("name", name)
+				.add("xCoo", xCoo)
+				.add("yCoo", yCoo)
+				.add("zCoo", zCoo)
+				.add("code", code)
+				.add("additional", additional)
+				.toString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		GeoPoint geoPoint = (GeoPoint) o;
+		return Objects.equal(name, geoPoint.name) &&
+				Objects.equal(xCoo, geoPoint.xCoo) &&
+				Objects.equal(yCoo, geoPoint.yCoo) &&
+				Objects.equal(zCoo, geoPoint.zCoo) &&
+				Objects.equal(code, geoPoint.code) &&
+				Objects.equal(additional, geoPoint.additional);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(name, xCoo, yCoo, zCoo, code, additional);
 	}
 }

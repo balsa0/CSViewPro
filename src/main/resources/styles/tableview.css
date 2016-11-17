@@ -1,8 +1,16 @@
 .table-row-cell{
-	-fx-background-color: #C5EAF3;
+	-fx-background-color: #F5F5F5;
 }
 
 .table-row-cell:odd{
+	-fx-background-color: #FFFFFF;
+}
+
+.table-row-cell #general{
+	-fx-background-color: #C5EAF3;
+}
+
+.table-row-cell:odd #general{
 	-fx-background-color: #FFFFFF;
 }
 
@@ -31,6 +39,10 @@
 }
 
 .table-row-cell #coo:selected{
+	-fx-background-color: #0096C9;
+}
+
+.table-row-cell #general:selected{
 	-fx-background-color: #0096C9;
 }
 

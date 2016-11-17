@@ -1,6 +1,7 @@
 package com.csviewpro.ui.view;
 
 import com.csviewpro.ui.toolbar.MainToolBar;
+import com.csviewpro.ui.view.numericassets.NumericViewStatusBar;
 import com.csviewpro.ui.view.numericassets.TableGrid;
 import javafx.scene.layout.BorderPane;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,13 @@ import javax.annotation.PostConstruct;
 public class NumericView extends BorderPane{
 
 	@Autowired
-	MainToolBar mainToolBar;
+	private MainToolBar mainToolBar;
 
 	@Autowired
-	TableGrid tableGrid;
+	private TableGrid tableGrid;
+
+	@Autowired
+	private NumericViewStatusBar statusBar;
 
 	@PostConstruct
 	private void init(){
@@ -29,6 +33,7 @@ public class NumericView extends BorderPane{
 
 		setTop(mainToolBar);
 		setCenter(tableGrid);
+		setBottom(statusBar);
 
 	}
 

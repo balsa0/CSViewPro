@@ -5,12 +5,12 @@ package com.csviewpro.domain.model.enumeration;
  */
 public enum ColumnRole {
 
-	XCOORDINATE("X"),
-	YCOORDINATE("Y"),
-	ZCOORDINATE("Z"),
-	POINTNAME("PontNév"),
-	POINTCODE("PontKód"),
-	OTHER("Egyéb");
+	XCOORDINATE("X koord."),
+	YCOORDINATE("Y koord."),
+	ZCOORDINATE("Z koord."),
+	POINTNAME("Pont"),
+	POINTCODE("Pontkód"),
+	OTHER("");
 
 	private final String defaultTitle;
 

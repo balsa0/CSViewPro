@@ -36,7 +36,6 @@ public class MainLayout extends BorderPane{
 		// add elements
 		setTop(mainMenuBar);
 		setCenter(fileHistoryView);
-		setBottom(new StatusBar());
 	}
 
 }

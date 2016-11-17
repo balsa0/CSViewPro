@@ -1,4 +1,5 @@
 package com.csviewpro.controller;
+
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.GeoPoint;
@@ -8,10 +9,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.DoubleStringConverter;
-import javafx.util.converter.LongStringConverter;
-import javafx.util.converter.NumberStringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -71,13 +68,11 @@ public class TableGridController {
 		// create a new column
 		TableColumn column = new TableColumn<GeoPoint, Object>(descriptor.getName());
 
-		// cell factory
-		if(descriptor.getType().equals(Double.class))
-			column.setCellFactory(TextFieldTableCell.<GeoPoint, Double>forTableColumn(new DoubleStringConverter()));
-		else if(descriptor.getType().equals(Long.class))
-			column.setCellFactory(TextFieldTableCell.<GeoPoint, Long>forTableColumn(new LongStringConverter()));
-		else
-			column.setCellFactory(TextFieldTableCell.<GeoPoint>forTableColumn());
+//		// cell factory
+//		if(Number.class.isAssignableFrom(descriptor.getType()))
+//			column.setCellFactory(TextFieldTableCell.<GeoPoint, Number>forTableColumn(new NumberStringConverter()));
+//		else
+//			column.setCellFactory(TextFieldTableCell.<GeoPoint>forTableColumn());
 
 
 		// cell value factory
@@ -97,8 +92,10 @@ public class TableGridController {
 					column.setId("pname");
 					return new SimpleStringProperty(p.getValue().getName() == null ? "" : p.getValue().getName());
 				case POINTCODE:
+					column.setId("general");
 					return new SimpleStringProperty(p.getValue().getCode() == null ? "" : p.getValue().getCode());
 				default:
+					column.setId("general");
 					// get value of the cell
 					Object value = p.getValue().getAdditional().get(index);
 					if(value == null)
@@ -117,7 +114,6 @@ public class TableGridController {
 
 		column.setSortable(false);
 		column.setEditable(true);
-
 
 		return column;
 	}

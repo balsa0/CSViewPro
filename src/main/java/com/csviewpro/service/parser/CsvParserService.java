@@ -3,12 +3,16 @@ package com.csviewpro.service.parser;
 import com.csviewpro.domain.exception.FileLoadingException;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
-import com.csviewpro.domain.model.GeoPoint;
+import com.csviewpro.domain.model.RowData;
 import com.csviewpro.domain.model.HeaderDescriptor;
 import com.csviewpro.domain.model.enumeration.ColumnRole;
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -507,30 +511,24 @@ public class CsvParserService {
 	private DataSet assembleDataSet(HeaderDescriptor headerDescriptor, List<Object[]> data){
 
 		// create empty list for the points
-		List<GeoPoint> pointList = new LinkedList<>();
+		List<RowData> pointList = new LinkedList<>();
 
-		// reverse lookup map
-		Map<ColumnRole, Integer> lookupMap = headerDescriptor
-				.getDescriptorData().entrySet()
-				.stream()
-				// exclude other roles
-				.filter(e -> e.getValue().getRole() != ColumnRole.OTHER)
-				.collect(Collectors.toMap(
-						e -> e.getValue().getRole(),
-						e -> e.getKey()
-				));
+//		// reverse lookup map
+//		Map<ColumnRole, Integer> lookupMap = headerDescriptor
+//				.getDescriptorData().entrySet()
+//				.stream()
+//				// exclude other roles
+//				.filter(e -> e.getValue().getRole() != ColumnRole.OTHER)
+//				.collect(Collectors.toMap(
+//						e -> e.getValue().getRole(),
+//						e -> e.getKey()
+//				));
 
-		// check if coordinates are available
-		if(lookupMap.get(ColumnRole.XCOORDINATE) == null || lookupMap.get(ColumnRole.YCOORDINATE) == null) {
-			log.error("X or Y coords are not defined.");
-			throw new FileLoadingException("Az X vagy Y koordináta nem felismerhető.");
-		}
-
-		Integer xCol = lookupMap.get(ColumnRole.XCOORDINATE);
-		Integer yCol = lookupMap.get(ColumnRole.YCOORDINATE);
-		Integer zCol = lookupMap.get(ColumnRole.ZCOORDINATE);
-		Integer nCol = lookupMap.get(ColumnRole.POINTNAME);
-		Integer cCol = lookupMap.get(ColumnRole.POINTCODE);
+//		// check if coordinates are available
+//		if(lookupMap.get(ColumnRole.XCOORDINATE) == null || lookupMap.get(ColumnRole.YCOORDINATE) == null) {
+//			log.error("X or Y coords are not defined.");
+//			throw new FileLoadingException("Az X vagy Y koordináta nem felismerhető.");
+//		}
 
 		for(Object[] row : data){
 
@@ -539,31 +537,31 @@ public class CsvParserService {
 				continue;
 
 			// create new geo point
-			GeoPoint point = new GeoPoint();
+			RowData point = new RowData();
 
 			// try to parse coordinates
 			try{
-				// x and y coordinates
-				point.setxCoo((Double) row[xCol]);
-				point.setyCoo((Double) row[yCol]);
-
-				// other optional coordinates
-				if(zCol != null && row[zCol] != null)
-					point.setzCoo((Double) row[zCol]);
-				if(nCol != null && row[nCol] != null)
-					point.setName(String.valueOf(row[nCol]));
-				if(cCol != null && row[cCol] != null)
-					point.setCode(String.valueOf(row[cCol]));
-
 				// create additional map
 				for(int i = 0; i < row.length; i++){
-					Object o = row[i];
-					// skip special values
-					if(i == xCol && i == yCol && i == zCol &&
-							i == nCol && i == cCol)
-						continue;
-					// add value to additional
-					point.getAdditional().put(i, o);
+
+					// real value
+					Object cell = row[i];
+
+					// observable value
+					ObservableValue propertyValue;
+
+					// convert cell value to observable value
+					if(headerDescriptor.getDescriptorData().get(i).getType().equals(String.class))
+						propertyValue = new SimpleStringProperty((String) cell);
+					else if(headerDescriptor.getDescriptorData().get(i).getType().equals(Long.class))
+						propertyValue = new SimpleLongProperty((Long) cell);
+					else if(headerDescriptor.getDescriptorData().get(i).getType().equals(Double.class))
+						propertyValue = new SimpleDoubleProperty((Double) cell);
+					else
+						propertyValue = new SimpleStringProperty(cell.toString());
+
+					// add value to point data
+					point.put(i, propertyValue);
 				}
 
 			}catch (Exception e){
@@ -620,7 +618,5 @@ public class CsvParserService {
 		// return converted row
 		return result;
 	}
-
-
 
 }

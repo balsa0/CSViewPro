@@ -2,6 +2,7 @@ package com.csviewpro.controller.filehandling;
 
 import com.csviewpro.controller.ApplicationUiStateController;
 import com.csviewpro.controller.NotificationsController;
+import com.csviewpro.controller.StatusBarController;
 import com.csviewpro.controller.TableGridController;
 import com.csviewpro.domain.ApplicationPreferences;
 import com.csviewpro.service.FileLoaderService;
@@ -46,6 +47,9 @@ public class LoadController {
 
 	@Autowired
 	private TableGridController tableGridController;
+
+	@Autowired
+	private StatusBarController statusBarController;
 
 	// preferences
 	private Preferences loadPreferences;
@@ -140,6 +144,8 @@ public class LoadController {
 				notificationsController.hide();
 				// rebuild table grid
 				tableGridController.rebuildTable();
+				// set status bar message
+				statusBarController.setStatusText(file.getName() + " sikeresen betöltve.");
 			});
 
 			loaderTask.setOnFailed(event -> {

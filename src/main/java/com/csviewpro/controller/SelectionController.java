@@ -1,6 +1,6 @@
 package com.csviewpro.controller;
 
-import com.csviewpro.domain.model.GeoPoint;
+import com.csviewpro.domain.model.RowData;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class SelectionController {
 	@Autowired
 	private StatusBarController statusBarController;
 
-	private List<GeoPoint> selectedPoints = null;
+	private List<RowData> selectedPoints = null;
 	private List<TablePosition> selectedCells = null;
 
 	@PostConstruct
@@ -33,7 +33,7 @@ public class SelectionController {
 			if(newSelection == null)
 				return;
 			// selected points
-			List<GeoPoint> newPoints = tableGrid.getSelectionModel().getSelectedItems();
+			List<RowData> newPoints = tableGrid.getSelectionModel().getSelectedItems();
 
 			// selected cells
 			List<TablePosition> newCells = tableGrid.getSelectionModel().getSelectedCells();
@@ -45,7 +45,7 @@ public class SelectionController {
 
 	}
 
-	public void pointSelectAction(List<GeoPoint> newPoints){
+	public void pointSelectAction(List<RowData> newPoints){
 
 		if(newPoints == null)
 			return;
@@ -58,7 +58,7 @@ public class SelectionController {
 	}
 
 
-	public void cellSelectAction(List<GeoPoint> newPoints, List<TablePosition> newCells){
+	public void cellSelectAction(List<RowData> newPoints, List<TablePosition> newCells){
 
 		// select points
 		pointSelectAction(newPoints);

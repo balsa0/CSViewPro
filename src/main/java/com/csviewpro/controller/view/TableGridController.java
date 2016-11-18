@@ -1,5 +1,8 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.view;
 
+import com.csviewpro.controller.actioncontroller.DataSetController;
+import com.csviewpro.controller.actioncontroller.EditRowController;
+import com.csviewpro.controller.actioncontroller.SelectionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
@@ -28,9 +31,6 @@ import javax.annotation.PostConstruct;
 public class TableGridController {
 
 	@Autowired
-	private NumericView numericView;
-
-	@Autowired
 	private TableGrid tableGrid;
 
 	@Autowired
@@ -40,10 +40,13 @@ public class TableGridController {
 	private ImageUtil imageUtil;
 
 	@Autowired
-	private PointEditorController pointEditorController;
+	private EditRowController editRowController;
 
 	@Autowired
-	private DataSetActionController datasetActionController;
+	private DataSetController datasetController;
+
+	@Autowired
+	private SelectionController selectionController;
 
 	@PostConstruct
 	private void init(){
@@ -189,14 +192,11 @@ public class TableGridController {
 							public void updateItem( String item, boolean empty )
 							{
 								super.updateItem( item, empty );
-								if ( empty )
-								{
+								if ( empty ) {
 									// hide everything
 									setGraphic( null );
 									setText( null );
-								}
-								else
-								{
+								} else {
 									// set button properties
 									btn.setPadding(new Insets(2));
 									btn.setId("editColumnBtn");
@@ -206,7 +206,7 @@ public class TableGridController {
 										// get actual row
 										RowData row = getTableView().getItems().get(getIndex());
 										// edit the row
-										pointEditorController.editRowAction(row);
+										editRowController.editRowAction(row);
 
 									} );
 									// cell padding
@@ -237,8 +237,8 @@ public class TableGridController {
 		);
 		editPointMenu.setOnAction(event -> {
 			// edit row
-			pointEditorController.editRowAction(
-					(RowData) tableGrid.getSelectionModel().getSelectedItem()
+			editRowController.editRowAction(
+					selectionController.getSelectedPoints().get(0)
 			);
 		});
 
@@ -249,8 +249,8 @@ public class TableGridController {
 		);
 		deletePointMenu.setOnAction(event -> {
 			// delete the row
-			datasetActionController.deleteRowAction(
-					(RowData) tableGrid.getSelectionModel().getSelectedItem()
+			datasetController.deleteRowAction(
+					selectionController.getSelectedPoints().get(0)
 			);
 		});
 

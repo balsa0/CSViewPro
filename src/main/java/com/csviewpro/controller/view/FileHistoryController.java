@@ -1,4 +1,4 @@
-package com.csviewpro.controller.filehandling;
+package com.csviewpro.controller.view;
 
 import com.csviewpro.domain.ApplicationPreferences;
 import com.csviewpro.ui.view.common.FileHistoryView;

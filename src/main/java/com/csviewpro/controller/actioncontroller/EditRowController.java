@@ -1,5 +1,6 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.actioncontroller;
 
+import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.view.common.PointEditorSheet;
@@ -8,13 +9,13 @@ import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import static com.csviewpro.controller.ApplicationUiStateController.UiState;
+import static com.csviewpro.controller.util.ApplicationUiStateController.UiState;
 
 /**
  * Created by Balsa on 2016. 11. 18..
  */
 @Controller
-public class PointEditorController {
+public class EditRowController {
 
 	@Autowired
 	private ApplicationUiStateController applicationUiStateController;

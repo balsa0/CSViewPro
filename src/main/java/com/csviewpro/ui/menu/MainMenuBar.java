@@ -1,7 +1,7 @@
 package com.csviewpro.ui.menu;
 
-import com.csviewpro.controller.ApplicationUiStateController;
-import com.csviewpro.controller.filehandling.LoadController;
+import com.csviewpro.controller.util.ApplicationUiStateController;
+import com.csviewpro.controller.actioncontroller.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;

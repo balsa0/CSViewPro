@@ -1,13 +1,13 @@
-package com.csviewpro.controller.filehandling;
+package com.csviewpro.controller.actioncontroller;
 
-import com.csviewpro.controller.ApplicationUiStateController;
-import com.csviewpro.controller.NotificationsController;
-import com.csviewpro.controller.StatusBarController;
-import com.csviewpro.controller.TableGridController;
+import com.csviewpro.controller.util.ApplicationUiStateController;
+import com.csviewpro.controller.view.FileHistoryController;
+import com.csviewpro.controller.view.NotificationsController;
+import com.csviewpro.controller.view.StatusBarController;
+import com.csviewpro.controller.view.TableGridController;
 import com.csviewpro.domain.ApplicationPreferences;
 import com.csviewpro.service.FileLoaderService;
 import com.csviewpro.service.WorkspaceDataService;
-import com.csviewpro.service.parser.CsvParserService;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;

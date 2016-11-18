@@ -1,6 +1,7 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.util;
 
 import com.csviewpro.ApplicationInitializer;
+import com.csviewpro.controller.view.MainLayoutController;
 import com.csviewpro.ui.menu.MainMenuBar;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,6 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.actioncontroller;
 
+import com.csviewpro.controller.view.StatusBarController;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
@@ -103,6 +104,11 @@ public class SelectionController {
 		numericView.setRight(null);
 	}
 
+	public List<RowData> getSelectedPoints() {
+		return selectedPoints;
+	}
 
-
+	public List<TablePosition> getSelectedCells() {
+		return selectedCells;
+	}
 }

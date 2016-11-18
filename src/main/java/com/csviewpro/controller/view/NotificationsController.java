@@ -1,4 +1,4 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.view;
 
 import com.csviewpro.ui.NotificationsWrapperLayout;
 import org.springframework.beans.factory.annotation.Autowired;

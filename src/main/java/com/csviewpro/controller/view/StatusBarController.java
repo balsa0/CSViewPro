@@ -1,5 +1,6 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.view;
 
+import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.ui.view.numeric.assets.NumericViewStatusBar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

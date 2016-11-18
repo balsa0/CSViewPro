@@ -1,4 +1,4 @@
-package com.csviewpro.controller;
+package com.csviewpro.controller.view;
 
 import com.csviewpro.ui.MainLayout;
 import com.csviewpro.ui.view.common.FileHistoryView;

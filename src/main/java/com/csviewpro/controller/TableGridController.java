@@ -5,20 +5,21 @@ import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
-import com.csviewpro.ui.view.common.PointEditorSheet;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Created by Balsa on 2016. 10. 31..
@@ -37,6 +38,17 @@ public class TableGridController {
 
 	@Autowired
 	private ImageUtil imageUtil;
+
+	@Autowired
+	private PointEditorController pointEditorController;
+
+	@Autowired
+	private DataSetActionController datasetActionController;
+
+	@PostConstruct
+	private void init(){
+		setupContextMenus();
+	}
 
 	public void rebuildTable() {
 
@@ -64,22 +76,17 @@ public class TableGridController {
 				});
 
 		// add index column
-		tableGrid.getColumns().add(generateIndexColumn());
+		tableGrid.getColumns().add(generateEditColumn());
 
 		// add all points to the list
-		tableGrid.getItems().addAll(
+		tableGrid.setItems(
 				dataSet.getPoints()
 		);
 
 		// on right click
 		tableGrid.setOnContextMenuRequested(event -> {
 
-			PointEditorSheet editor = new PointEditorSheet(
-					(RowData) tableGrid.getSelectionModel().getSelectedItem(),
-					workspaceDataService.getActiveDataSet().getHeaderDescriptor()
-			);
 
-			numericView.setRight(editor);
 
 		});
 
@@ -91,7 +98,7 @@ public class TableGridController {
 	}
 
 	public void clearTable(){
-		tableGrid.getItems().clear();
+		tableGrid.setItems(FXCollections.emptyObservableList());
 		tableGrid.getColumns().clear();
 	}
 
@@ -154,7 +161,11 @@ public class TableGridController {
 		return column;
 	}
 
-	private TableColumn generateIndexColumn(){
+	/**
+	 * Generates an "edit action" column.
+	 * @return generated {@link TableColumn}.
+	 */
+	private TableColumn generateEditColumn(){
 		// create button table
 		TableColumn indexColumn = new TableColumn();
 		indexColumn.setEditable(false);
@@ -194,21 +205,8 @@ public class TableGridController {
 									{
 										// get actual row
 										RowData row = getTableView().getItems().get(getIndex());
-
-										// create property editor for the row
-										PointEditorSheet editor = new PointEditorSheet(
-												row, workspaceDataService.getActiveDataSet().getHeaderDescriptor()
-										);
-
-										// highlight the row
-										tableGrid.getSelectionModel().clearSelection();
-										tableGrid.getSelectionModel().select(getIndex());
-
-										// set property sheet
-										numericView.setRight(editor);
-
-										// set focus on editor
-										editor.requestFocus();
+										// edit the row
+										pointEditorController.editRowAction(row);
 
 									} );
 									// cell padding
@@ -226,5 +224,45 @@ public class TableGridController {
 
 		return indexColumn;
 	}
+
+	/**
+	 * Sets up context menus.
+	 */
+	public void setupContextMenus(){
+
+		// edit point menu
+		MenuItem editPointMenu = new MenuItem(
+				"Pont szerketszése",
+				imageUtil.getResourceIconImage("actions/edit_sm.png")
+		);
+		editPointMenu.setOnAction(event -> {
+			// edit row
+			pointEditorController.editRowAction(
+					(RowData) tableGrid.getSelectionModel().getSelectedItem()
+			);
+		});
+
+		// delete point menu
+		MenuItem deletePointMenu = new MenuItem(
+				"Pont törlése",
+				imageUtil.getResourceIconImage("actions/delete_sm.png")
+		);
+		deletePointMenu.setOnAction(event -> {
+			// delete the row
+			datasetActionController.deleteRowAction(
+					(RowData) tableGrid.getSelectionModel().getSelectedItem()
+			);
+		});
+
+		// add items to menu
+		tableGrid.getSingleSelectionContextMenu().getItems().addAll(
+				editPointMenu,
+				deletePointMenu
+		);
+
+	}
+
+
+
 
 }

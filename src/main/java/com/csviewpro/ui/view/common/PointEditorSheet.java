@@ -22,6 +22,14 @@ public class PointEditorSheet extends PropertySheet {
 	private RowData point;
 	private HeaderDescriptor headerDescriptor;
 
+	public RowData getPoint() {
+		return point;
+	}
+
+	public HeaderDescriptor getHeaderDescriptor() {
+		return headerDescriptor;
+	}
+
 	public PointEditorSheet(RowData point, HeaderDescriptor headerDescriptor) {
 		this.point = point;
 		this.headerDescriptor = headerDescriptor;
@@ -39,13 +47,14 @@ public class PointEditorSheet extends PropertySheet {
 			);
 		}
 
-
-
 		// add all items
 		this.getItems().addAll(items);
 
 		// set some properties
 		setSearchBoxVisible(false);
+
+
+
 	}
 
 

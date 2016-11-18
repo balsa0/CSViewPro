@@ -48,6 +48,21 @@ public class SelectionController {
 			// select action
 			cellSelectAction(newPoints, newCells);
 
+			// set proper context menu on selection
+			tableGrid.setOnContextMenuRequested(event -> {
+				if(newPoints.size() > 1){
+					// show multi point selection
+					tableGrid.getMultiSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
+				}else{
+					// show single point selection
+					tableGrid.getSingleSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
+				}
+			});
+
+			// hide context menus on selection
+			tableGrid.getSingleSelectionContextMenu().hide();
+			tableGrid.getMultiSelectionContextMenu().hide();
+
 		});
 
 	}

@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -513,23 +514,6 @@ public class CsvParserService {
 		// create empty list for the points
 		List<RowData> pointList = new LinkedList<>();
 
-//		// reverse lookup map
-//		Map<ColumnRole, Integer> lookupMap = headerDescriptor
-//				.getDescriptorData().entrySet()
-//				.stream()
-//				// exclude other roles
-//				.filter(e -> e.getValue().getRole() != ColumnRole.OTHER)
-//				.collect(Collectors.toMap(
-//						e -> e.getValue().getRole(),
-//						e -> e.getKey()
-//				));
-
-//		// check if coordinates are available
-//		if(lookupMap.get(ColumnRole.XCOORDINATE) == null || lookupMap.get(ColumnRole.YCOORDINATE) == null) {
-//			log.error("X or Y coords are not defined.");
-//			throw new FileLoadingException("Az X vagy Y koordináta nem felismerhető.");
-//		}
-
 		for(Object[] row : data){
 
 			// skip if row is empty
@@ -573,7 +557,7 @@ public class CsvParserService {
 
 		}
 
-		return new DataSet(headerDescriptor, pointList);
+		return new DataSet(headerDescriptor, FXCollections.observableArrayList(pointList));
 	}
 
 

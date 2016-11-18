@@ -1,6 +1,7 @@
 package com.csviewpro.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.collections.ObservableList;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,14 +18,14 @@ public class DataSet implements Serializable{
 
 	// points data
 	@JsonProperty
-	private List<RowData> points;
+	private ObservableList<RowData> points;
 
 	/**
 	 * This constructor creates a data set.
 	 * @param headerDescriptor the header descriptor metadata.
 	 * @param points the points to store.
 	 */
-	public DataSet(HeaderDescriptor headerDescriptor, List<RowData> points) {
+	public DataSet(HeaderDescriptor headerDescriptor, ObservableList<RowData> points) {
 		this.headerDescriptor = headerDescriptor;
 		this.points = points;
 	}
@@ -37,11 +38,11 @@ public class DataSet implements Serializable{
 		this.headerDescriptor = headerDescriptor;
 	}
 
-	public List<RowData> getPoints() {
+	public ObservableList<RowData> getPoints() {
 		return points;
 	}
 
-	public void setPoints(List<RowData> points) {
+	public void setPoints(ObservableList<RowData> points) {
 		this.points = points;
 	}
 }

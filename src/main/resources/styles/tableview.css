@@ -31,10 +31,12 @@
 }
 
 .table-row-cell :selected {
+	-fx-color: #FFFFFF;
 	-fx-background-color: #0096C9;
 }
 
 .table-row-cell #pname:selected{
+	-fx-color: #FFFFFF;
 	-fx-background-color: #0096C9;
 }
 
@@ -43,6 +45,7 @@
 }
 
 .table-row-cell #general:selected{
+	-fx-color: #FFFFFF;
 	-fx-background-color: #0096C9;
 }
 
@@ -57,4 +60,12 @@
 	-fx-background-color: #FFFFFF;
 	-fx-border-radius: 0;
 	-fx-border-width: 0;
+}
+
+#editColumnBtn{
+	-fx-background-color: transparent;
+}
+
+#editColumnBtn:hover{
+	-fx-background-color: #0096C9;
 }

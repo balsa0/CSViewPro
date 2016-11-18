@@ -9,13 +9,13 @@ import com.csviewpro.ui.view.common.PointEditorSheet;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -137,6 +137,9 @@ public class TableGridController {
 					column.setGraphic(imageUtil.getResourceIconImage("actions/marker_sm.png"));
 					break;
 				case POINTCODE:
+					column.setGraphic(imageUtil.getResourceIconImage("actions/pcode_sm.png"));
+					column.setId("general");
+					break;
 				default:
 					column.setId("general");
 					break;
@@ -156,7 +159,7 @@ public class TableGridController {
 		TableColumn indexColumn = new TableColumn();
 		indexColumn.setEditable(false);
 		indexColumn.setSortable(false);
-		indexColumn.setGraphic(imageUtil.getResourceIconImage("actions/edit_sm.png"));
+		indexColumn.setGraphic(imageUtil.getResourceIconImage("actions/edit_multi_sm.png"));
 		indexColumn.setText(null);
 
 		// cell factory
@@ -185,6 +188,7 @@ public class TableGridController {
 								{
 									// set button properties
 									btn.setPadding(new Insets(2));
+									btn.setId("editColumnBtn");
 									btn.setGraphic(imageUtil.getResourceIconImage("actions/edit_sm.png", 18));
 									btn.setOnAction( ( ActionEvent event ) ->
 									{
@@ -205,8 +209,6 @@ public class TableGridController {
 
 										// set focus on editor
 										editor.requestFocus();
-
-										editor
 
 									} );
 									// cell padding

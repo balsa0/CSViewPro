@@ -19,7 +19,7 @@ public class StatusBarController {
 
 	public void setStatusText(String text){
 		switch (uiStateController.getActiveState()){
-			case STATE_FILE_OPEN:
+			case STATE_FILE_OPEN_NUMERIC:
 				numericViewStatusBar.setText(text);
 				break;
 			default:

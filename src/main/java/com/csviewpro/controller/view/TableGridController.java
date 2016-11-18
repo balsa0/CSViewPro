@@ -1,14 +1,12 @@
 package com.csviewpro.controller.view;
 
-import com.csviewpro.controller.actioncontroller.DataSetController;
-import com.csviewpro.controller.actioncontroller.EditRowController;
+import com.csviewpro.controller.actioncontroller.RowActionsController;
 import com.csviewpro.controller.actioncontroller.SelectionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
-import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
@@ -40,13 +38,7 @@ public class TableGridController {
 	private ImageUtil imageUtil;
 
 	@Autowired
-	private EditRowController editRowController;
-
-	@Autowired
-	private DataSetController datasetController;
-
-	@Autowired
-	private SelectionController selectionController;
+	private RowActionsController rowActionsController;
 
 	@PostConstruct
 	private void init(){
@@ -206,7 +198,7 @@ public class TableGridController {
 										// get actual row
 										RowData row = getTableView().getItems().get(getIndex());
 										// edit the row
-										editRowController.editRowAction(row);
+										rowActionsController.editRowAction(row);
 
 									} );
 									// cell padding
@@ -237,9 +229,7 @@ public class TableGridController {
 		);
 		editPointMenu.setOnAction(event -> {
 			// edit row
-			editRowController.editRowAction(
-					selectionController.getSelectedPoints().get(0)
-			);
+			rowActionsController.editRowAction();
 		});
 
 		// delete point menu
@@ -249,9 +239,7 @@ public class TableGridController {
 		);
 		deletePointMenu.setOnAction(event -> {
 			// delete the row
-			datasetController.deleteRowAction(
-					selectionController.getSelectedPoints().get(0)
-			);
+			rowActionsController.deleteRowAction();
 		});
 
 		// add items to menu

@@ -21,7 +21,8 @@ public class ApplicationUiStateController {
 	 */
 	public enum UiState{
 		STATE_FILEHISTORY,
-		STATE_FILE_OPEN
+		STATE_FILE_OPEN_NUMERIC,
+		STATE_FILE_OPEN_GRAPHIC
 	}
 
 	@Autowired
@@ -90,7 +91,7 @@ public class ApplicationUiStateController {
 		// add window subtitle
 		setAppSubTitleText(fileName);
 		// set state
-		setActiveState(UiState.STATE_FILE_OPEN);
+		setActiveState(UiState.STATE_FILE_OPEN_NUMERIC);
 	}
 
 

@@ -2,8 +2,10 @@ package com.csviewpro.controller.actioncontroller;
 
 import com.csviewpro.controller.view.StatusBarController;
 import com.csviewpro.domain.model.RowData;
+import com.csviewpro.ui.menu.MainMenuBar;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
+import javafx.collections.FXCollections;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,9 @@ public class SelectionController {
 
 	@Autowired
 	private StatusBarController statusBarController;
+
+	@Autowired
+	private MainMenuBar mainMenuBar;
 
 	private List<RowData> selectedPoints = null;
 	private List<TablePosition> selectedCells = null;
@@ -86,6 +91,9 @@ public class SelectionController {
 		// select points
 		pointSelectAction(newPoints);
 
+		// set main menu bar state
+		mainMenuBar.activateSelectionState(newPoints);
+
 		// if cells are null, do not continue
 		if(newCells == null)
 			return;
@@ -110,5 +118,20 @@ public class SelectionController {
 
 	public List<TablePosition> getSelectedCells() {
 		return selectedCells;
+	}
+
+	public void unselectAction(){
+
+		// remove all cells
+		selectedCells = FXCollections.emptyObservableList();
+
+		// remove all points
+		selectedPoints = FXCollections.emptyObservableList();
+
+		// set main menu bar state
+		mainMenuBar.activateSelectionState(selectedPoints);
+
+		// remove selection from table
+		tableGrid.getSelectionModel().clearSelection();
 	}
 }

@@ -1,8 +1,13 @@
 package com.csviewpro.ui.menu;
 
+import com.csviewpro.controller.actioncontroller.RowActionsController;
+import com.csviewpro.controller.actioncontroller.SelectionController;
+import com.csviewpro.controller.actioncontroller.ViewActionController;
 import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.controller.actioncontroller.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
+import com.csviewpro.domain.model.RowData;
+import com.csviewpro.ui.view.common.LicenseView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -16,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 /**
  * Created by Balsa on 2016. 10. 15..
@@ -24,10 +30,19 @@ import javax.annotation.PostConstruct;
 public class MainMenuBar extends MenuBar {
 
 	@Autowired
-	LoadController loadController;
+	private ApplicationContext applicationContext;
 
 	@Autowired
-	ApplicationContext applicationContext;
+	private LoadController loadController;
+
+	@Autowired
+	private RowActionsController rowActionsController;
+
+	@Autowired
+	private SelectionController selectionController;
+
+	@Autowired
+	private ViewActionController viewActionController;
 
 	@Autowired
 	ImageUtil imageUtil;
@@ -38,19 +53,29 @@ public class MainMenuBar extends MenuBar {
 	private MenuItem fileMenu_close = new MenuItem("Fájl bezárása");
 	private MenuItem fileMenu_exit = new MenuItem("Kilépés");
 
+	// edit
+	private Menu editMenu = new Menu("Szerkesztés");
+	private MenuItem editMenu_editRow = new MenuItem("Kijelölt pont szerkesztése");
+	private MenuItem editMenu_deleteRow = new MenuItem("Kijelölt pont törlése");
+	private MenuItem editMenu_unselectAll = new MenuItem("Kijelölés megszűntetése");
+
 	// view
 	private Menu viewMenu = new Menu("Nézet");
+	private MenuItem viewMenu_refresh = new MenuItem("Frissítés");
+	private MenuItem viewMenu_reload = new MenuItem("Nézet újratöltése");
 	private MenuItem viewMenu_numerical = new MenuItem("Táblázat nézet");
 	private MenuItem viewMenu_graphical = new MenuItem("Térkép nézet");
 
 	// help
 	private Menu helpMenu = new Menu("Súgó");
-	private MenuItem helpMenu_about = new MenuItem("Névjegy és Licenszek");
+	private MenuItem helpMenu_cc = new MenuItem("Felhasznált ");
+	private MenuItem helpMenu_about = new MenuItem("Névjegy");
 
 	@PostConstruct
 	public void init(){
 		populate();
 		setupFileMenu();
+		setupEditMenu();
 		setupViewMenu();
 		setupHelpMenu();
 	}
@@ -58,6 +83,7 @@ public class MainMenuBar extends MenuBar {
 	private void populate(){
 		getMenus().addAll(
 				fileMenu,
+				editMenu,
 				viewMenu,
 				helpMenu
 		);
@@ -94,9 +120,40 @@ public class MainMenuBar extends MenuBar {
 		);
 	}
 
+	private void setupEditMenu(){
+		// edit menu
+		editMenu.setDisable(true);
+		// edit row
+		editMenu_editRow.setGraphic(imageUtil.getResourceIconImage("actions/edit_sm.png"));
+		editMenu_editRow.setDisable(true);
+		editMenu_editRow.setOnAction(event -> rowActionsController.editRowAction());
+
+		editMenu_deleteRow.setGraphic(imageUtil.getResourceIconImage("actions/delete_sm.png"));
+		editMenu_deleteRow.setDisable(true);
+		editMenu_deleteRow.setOnAction(event -> rowActionsController.deleteRowAction());
+
+		editMenu_unselectAll.setGraphic(imageUtil.getResourceIconImage("actions/clear_sm.png"));
+		editMenu_unselectAll.setDisable(true);
+		editMenu_unselectAll.setOnAction(event -> selectionController.unselectAction());
+
+		// add items
+		editMenu.getItems().addAll(
+				editMenu_editRow,
+				editMenu_deleteRow,
+				new SeparatorMenuItem(),
+				editMenu_unselectAll
+		);
+	}
+
 	private void setupViewMenu(){
 		// view menu
 		viewMenu.setDisable(true);
+		// refresh view
+		viewMenu_refresh.setGraphic(imageUtil.getResourceIconImage("actions/refresh_sm.png"));
+		viewMenu_refresh.setOnAction(event -> viewActionController.refreshView());
+		// reload view
+		viewMenu_reload.setGraphic(imageUtil.getResourceIconImage("actions/reload_sm.png"));
+		viewMenu_reload.setOnAction(event -> viewActionController.reloadView());
 		// numerical view
 		viewMenu_numerical.setGraphic(imageUtil.getResourceIconImage("actions/numeric_sm.png"));
 		// graphical
@@ -104,14 +161,19 @@ public class MainMenuBar extends MenuBar {
 
 		// add items
 		viewMenu.getItems().addAll(
+				viewMenu_refresh,
+				new SeparatorMenuItem(),
 				viewMenu_numerical,
-				viewMenu_graphical
+				viewMenu_graphical,
+				new SeparatorMenuItem(),
+				viewMenu_reload
 		);
 	}
 
 	private void setupHelpMenu(){
 		// about menu
-		helpMenu_about.setGraphic(imageUtil.getResourceIconImage("actions/about_sm.png"));
+		helpMenu_about.setGraphic(imageUtil.getResourceIconImage("actions/info_sm.png"));
+//		helpMenu.setOnAction(event -> new LicenseView().show());
 
 		// populate help menu
 		helpMenu.getItems().addAll(
@@ -125,18 +187,23 @@ public class MainMenuBar extends MenuBar {
 	 */
 	public void activateMenuState(ApplicationUiStateController.UiState uiState){
 
-		// file history
+		// activate state for the menu
 		switch (uiState){
 			case STATE_FILEHISTORY:
 				// disable close file menu
 				fileMenu_close.setDisable(true);
+				// disable edit menu
+				editMenu.setDisable(true);
 				// disable view menu
 				viewMenu.setDisable(true);
 
 				break;
-			case STATE_FILE_OPEN:
+			case STATE_FILE_OPEN_NUMERIC:
+			case STATE_FILE_OPEN_GRAPHIC:
 				// enable close file menu
 				fileMenu_close.setDisable(false);
+				// enable edit menu
+				editMenu.setDisable(false);
 				// enable view menu
 				viewMenu.setDisable(false);
 
@@ -144,6 +211,37 @@ public class MainMenuBar extends MenuBar {
 
 			default:
 				return;
+		}
+
+		// view specific stuff
+		if(uiState == ApplicationUiStateController.UiState.STATE_FILE_OPEN_NUMERIC){
+			// specific to numeric view
+			viewMenu_graphical.setDisable(false);
+			viewMenu_numerical.setDisable(true);
+		}else if(uiState == ApplicationUiStateController.UiState.STATE_FILE_OPEN_GRAPHIC){
+			// specific to graphical view
+			viewMenu_graphical.setDisable(true);
+			viewMenu_numerical.setDisable(false);
+		}
+
+	}
+
+	public void activateSelectionState(List<RowData> selection){
+		// if no selected rows
+		if (selection == null || selection.size() == 0) {
+			editMenu_editRow.setDisable(true);
+			editMenu_deleteRow.setDisable(true);
+			editMenu_unselectAll.setDisable(true);
+		// if there are selected rows
+		}else{
+			editMenu_unselectAll.setDisable(false);
+		}
+
+		// if there are exactly 1 selected rows
+		if(selection.size() == 1){
+			editMenu_editRow.setDisable(false);
+			editMenu_deleteRow.setDisable(false);
+
 		}
 	}
 

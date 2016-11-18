@@ -38,6 +38,11 @@ public class MainMenuBar extends MenuBar {
 	private MenuItem fileMenu_close = new MenuItem("Fájl bezárása");
 	private MenuItem fileMenu_exit = new MenuItem("Kilépés");
 
+	// view
+	private Menu viewMenu = new Menu("Nézet");
+	private MenuItem viewMenu_numerical = new MenuItem("Táblázat nézet");
+	private MenuItem viewMenu_graphical = new MenuItem("Térkép nézet");
+
 	// help
 	private Menu helpMenu = new Menu("Súgó");
 	private MenuItem helpMenu_about = new MenuItem("Névjegy és Licenszek");
@@ -46,12 +51,14 @@ public class MainMenuBar extends MenuBar {
 	public void init(){
 		populate();
 		setupFileMenu();
+		setupViewMenu();
 		setupHelpMenu();
 	}
 
 	private void populate(){
 		getMenus().addAll(
 				fileMenu,
+				viewMenu,
 				helpMenu
 		);
 	}
@@ -87,6 +94,21 @@ public class MainMenuBar extends MenuBar {
 		);
 	}
 
+	private void setupViewMenu(){
+		// view menu
+		viewMenu.setDisable(true);
+		// numerical view
+		viewMenu_numerical.setGraphic(imageUtil.getResourceIconImage("actions/numeric_sm.png"));
+		// graphical
+		viewMenu_graphical.setGraphic(imageUtil.getResourceIconImage("actions/map_sm.png"));
+
+		// add items
+		viewMenu.getItems().addAll(
+				viewMenu_numerical,
+				viewMenu_graphical
+		);
+	}
+
 	private void setupHelpMenu(){
 		// about menu
 		helpMenu_about.setGraphic(imageUtil.getResourceIconImage("actions/about_sm.png"));
@@ -108,11 +130,15 @@ public class MainMenuBar extends MenuBar {
 			case STATE_FILEHISTORY:
 				// disable close file menu
 				fileMenu_close.setDisable(true);
+				// disable view menu
+				viewMenu.setDisable(true);
 
 				break;
 			case STATE_FILE_OPEN:
 				// enable close file menu
 				fileMenu_close.setDisable(false);
+				// enable view menu
+				viewMenu.setDisable(false);
 
 				break;
 

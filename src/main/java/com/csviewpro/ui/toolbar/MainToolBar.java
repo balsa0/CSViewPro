@@ -23,7 +23,7 @@ public class MainToolBar extends ToolBar {
 	@Autowired
 	ImageUtil imageUtil;
 
-	Button openButton = new Button();
+	Button mapViewButton = new Button("Térkép");
 
 	@PostConstruct
 	private void init(){
@@ -35,16 +35,15 @@ public class MainToolBar extends ToolBar {
 	}
 
 	private void setupButtons(){
-		openButton.setGraphic(imageUtil.getResourceIconImage("actions/open_sm.png"));
-		openButton.setOnAction(event -> {
+		mapViewButton.setGraphic(imageUtil.getResourceIconImage("actions/map_md.png", 24));
+		mapViewButton.setOnAction(event -> {
 			loadController.openFileChooserAction();
 		});
-		openButton.setTooltip(new Tooltip("Megnyitás..."));
 	}
 
 	private void populate(){
 		getItems().addAll(
-				openButton
+				mapViewButton
 		);
 	}
 

@@ -6,6 +6,7 @@ import com.csviewpro.domain.model.RowData;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import org.controlsfx.control.PropertySheet;
+import org.controlsfx.property.editor.Editors;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.csviewpro.controller;
 
+import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
@@ -7,10 +8,15 @@ import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.view.common.PointEditorSheet;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleStringProperty;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -29,7 +35,10 @@ public class TableGridController {
 	@Autowired
 	private WorkspaceDataService workspaceDataService;
 
-	public void rebuildTable(){
+	@Autowired
+	private ImageUtil imageUtil;
+
+	public void rebuildTable() {
 
 		// clear the table
 		clearTable();
@@ -38,19 +47,24 @@ public class TableGridController {
 		DataSet dataSet = workspaceDataService.getActiveDataSet();
 
 		// null check
-		if(dataSet == null)
+		if (dataSet == null)
 			throw new NullPointerException("Can not rebuild table. Data set is null.");
+
+		//http://stackoverflow.com/questions/29489366/how-to-add-button-in-javafx-table-view
 
 		// start building the table
 		dataSet.getHeaderDescriptor().getDescriptorData()
-			.entrySet()
-			.stream()
-			.forEach(entry -> {
-				// add column to the table
-				tableGrid.getColumns().add(
-						entry.getKey(), generateTableColumn(entry.getKey(), entry.getValue())
-				);
-			});
+				.entrySet()
+				.stream()
+				.forEach(entry -> {
+					// add column to the table
+					tableGrid.getColumns().add(
+							entry.getKey(), generateTableColumn(entry.getKey(), entry.getValue())
+					);
+				});
+
+		// add index column
+		tableGrid.getColumns().add(generateIndexColumn());
 
 		// add all points to the list
 		tableGrid.getItems().addAll(
@@ -69,6 +83,11 @@ public class TableGridController {
 
 		});
 
+		// disable reordering
+		tableGrid.widthProperty().addListener((source, oldWidth, newWidth) -> {
+			TableHeaderRow header = (TableHeaderRow) tableGrid.lookup("TableHeaderRow");
+			header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
+		});
 	}
 
 	public void clearTable(){
@@ -92,7 +111,6 @@ public class TableGridController {
 //		else
 //			column.setCellFactory(TextFieldTableCell.<RowData>forTableColumn());
 
-
 		// cell value factory
 		column.setCellValueFactory(param -> {
 			TableColumn.CellDataFeatures<RowData, Object> p = (TableColumn.CellDataFeatures<RowData, Object>) param;
@@ -103,12 +121,20 @@ public class TableGridController {
 			// add some content dependent
 			switch (descriptor.getRole()){
 				case XCOORDINATE:
+					column.setId("coo");
+					column.setGraphic(imageUtil.getResourceIconImage("actions/xcoo_sm.png"));
+					break;
 				case YCOORDINATE:
+					column.setId("coo");
+					column.setGraphic(imageUtil.getResourceIconImage("actions/ycoo_sm.png"));
+					break;
 				case ZCOORDINATE:
 					column.setId("coo");
+					column.setGraphic(imageUtil.getResourceIconImage("actions/zcoo_sm.png"));
 					break;
 				case POINTNAME:
 					column.setId("pname");
+					column.setGraphic(imageUtil.getResourceIconImage("actions/marker_sm.png"));
 					break;
 				case POINTCODE:
 				default:
@@ -123,6 +149,87 @@ public class TableGridController {
 		column.setEditable(true);
 
 		return column;
+	}
+
+	private TableColumn generateIndexColumn(){
+		// create button table
+		TableColumn indexColumn = new TableColumn();
+		indexColumn.setEditable(false);
+		indexColumn.setSortable(false);
+		indexColumn.setGraphic(imageUtil.getResourceIconImage("actions/edit_sm.png"));
+		indexColumn.setText(null);
+
+		// cell factory
+		Callback<TableColumn<RowData, String>, TableCell<RowData, String>> cellFactory = //
+				new Callback<TableColumn<RowData, String>, TableCell<RowData, String>>()
+				{
+					@Override
+					public TableCell call( final TableColumn<RowData, String> param )
+					{
+						final TableCell<RowData, String> cell = new TableCell<RowData, String>()
+						{
+
+							final Button btn = new Button();
+
+							@Override
+							public void updateItem( String item, boolean empty )
+							{
+								super.updateItem( item, empty );
+								if ( empty )
+								{
+									// hide everything
+									setGraphic( null );
+									setText( null );
+								}
+								else
+								{
+									// set button properties
+									btn.setPadding(new Insets(2));
+									btn.setGraphic(imageUtil.getResourceIconImage("actions/edit_sm.png", 18));
+									btn.setOnAction( ( ActionEvent event ) ->
+									{
+										// get actual row
+										RowData row = getTableView().getItems().get(getIndex());
+										// edit row
+										PointEditorSheet editor = new PointEditorSheet(
+												row, workspaceDataService.getActiveDataSet().getHeaderDescriptor()
+										);
+
+										// highlight the row
+										tableGrid.getSelectionModel().clearSelection();
+										tableGrid.getSelectionModel().select(getIndex());
+
+										// set property sheet
+										numericView.setRight(editor);
+
+									} );
+									// cell padding
+									this.setPadding(new Insets(0));
+									this.setGraphic(btn);
+									this.setText(null);
+//									this.setDisable(true);
+//									this.setOnMouseClicked(event ->
+//									{
+//										// get actual row
+//										RowData row = getTableView().getItems().get(getIndex());
+//										// edit row
+//										PointEditorSheet editor = new PointEditorSheet(
+//												row, workspaceDataService.getActiveDataSet().getHeaderDescriptor()
+//										);
+//
+//										numericView.setRight(editor);
+//
+//									} );
+								}
+							}
+						};
+						return cell;
+					}
+				};
+
+		indexColumn.setCellFactory( cellFactory );
+
+		return indexColumn;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.csviewpro.controller;
 
 import com.csviewpro.domain.model.RowData;
+import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class SelectionController {
 
 	@Autowired
 	private TableGrid tableGrid;
+
+	@Autowired
+	private NumericView numericView;
 
 	@Autowired
 	private StatusBarController statusBarController;
@@ -38,6 +42,9 @@ public class SelectionController {
 			// selected cells
 			List<TablePosition> newCells = tableGrid.getSelectionModel().getSelectedCells();
 
+			// numeric view action
+			numericViewAction();
+
 			// select action
 			cellSelectAction(newPoints, newCells);
 
@@ -45,7 +52,7 @@ public class SelectionController {
 
 	}
 
-	public void pointSelectAction(List<RowData> newPoints){
+	private void pointSelectAction(List<RowData> newPoints){
 
 		if(newPoints == null)
 			return;
@@ -58,7 +65,7 @@ public class SelectionController {
 	}
 
 
-	public void cellSelectAction(List<RowData> newPoints, List<TablePosition> newCells){
+	private void cellSelectAction(List<RowData> newPoints, List<TablePosition> newCells){
 
 		// select points
 		pointSelectAction(newPoints);
@@ -76,7 +83,10 @@ public class SelectionController {
 		selectedCells = newCells;
 	}
 
-
+	private void numericViewAction(){
+		// hide property editor
+		numericView.setRight(null);
+	}
 
 
 

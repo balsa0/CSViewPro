@@ -190,7 +190,8 @@ public class TableGridController {
 									{
 										// get actual row
 										RowData row = getTableView().getItems().get(getIndex());
-										// edit row
+
+										// create property editor for the row
 										PointEditorSheet editor = new PointEditorSheet(
 												row, workspaceDataService.getActiveDataSet().getHeaderDescriptor()
 										);
@@ -202,24 +203,16 @@ public class TableGridController {
 										// set property sheet
 										numericView.setRight(editor);
 
+										// set focus on editor
+										editor.requestFocus();
+
+										editor
+
 									} );
 									// cell padding
 									this.setPadding(new Insets(0));
 									this.setGraphic(btn);
 									this.setText(null);
-//									this.setDisable(true);
-//									this.setOnMouseClicked(event ->
-//									{
-//										// get actual row
-//										RowData row = getTableView().getItems().get(getIndex());
-//										// edit row
-//										PointEditorSheet editor = new PointEditorSheet(
-//												row, workspaceDataService.getActiveDataSet().getHeaderDescriptor()
-//										);
-//
-//										numericView.setRight(editor);
-//
-//									} );
 								}
 							}
 						};

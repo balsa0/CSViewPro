@@ -39,6 +39,8 @@ public class PointEditorSheet extends PropertySheet {
 			);
 		}
 
+
+
 		// add all items
 		this.getItems().addAll(items);
 

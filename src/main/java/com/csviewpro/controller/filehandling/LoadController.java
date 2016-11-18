@@ -6,6 +6,7 @@ import com.csviewpro.controller.StatusBarController;
 import com.csviewpro.controller.TableGridController;
 import com.csviewpro.domain.ApplicationPreferences;
 import com.csviewpro.service.FileLoaderService;
+import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.service.parser.CsvParserService;
 import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
@@ -50,6 +51,9 @@ public class LoadController {
 
 	@Autowired
 	private StatusBarController statusBarController;
+
+	@Autowired
+	private WorkspaceDataService workspaceDataService;
 
 	// preferences
 	private Preferences loadPreferences;
@@ -144,8 +148,10 @@ public class LoadController {
 				notificationsController.hide();
 				// rebuild table grid
 				tableGridController.rebuildTable();
+				// get number of records
+				Integer records = workspaceDataService.getActiveDataSet().getPoints().size();
 				// set status bar message
-				statusBarController.setStatusText(file.getName() + " sikeresen betöltve.");
+				statusBarController.setStatusText(file.getName() + " sikeresen betöltve (összesen " + records + " pont).");
 			});
 
 			loaderTask.setOnFailed(event -> {

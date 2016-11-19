@@ -7,7 +7,6 @@ import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.controller.actioncontroller.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.RowData;
-import com.csviewpro.ui.view.common.LicenseView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -134,7 +133,7 @@ public class MainMenuBar extends MenuBar {
 
 		editMenu_unselectAll.setGraphic(imageUtil.getResourceIconImage("actions/clear_sm.png"));
 		editMenu_unselectAll.setDisable(true);
-		editMenu_unselectAll.setOnAction(event -> selectionController.unselectAction());
+		editMenu_unselectAll.setOnAction(event -> selectionController.unSelectAction());
 
 		// add items
 		editMenu.getItems().addAll(
@@ -235,6 +234,8 @@ public class MainMenuBar extends MenuBar {
 		// if there are selected rows
 		}else{
 			editMenu_unselectAll.setDisable(false);
+			editMenu_editRow.setDisable(true);
+			editMenu_deleteRow.setDisable(true);
 		}
 
 		// if there are exactly 1 selected rows

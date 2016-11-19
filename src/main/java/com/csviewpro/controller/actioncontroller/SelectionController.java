@@ -2,15 +2,22 @@ package com.csviewpro.controller.actioncontroller;
 
 import com.csviewpro.controller.view.StatusBarController;
 import com.csviewpro.domain.model.RowData;
+import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.menu.MainMenuBar;
+import com.csviewpro.ui.view.common.AnalysisChartView;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,7 +36,13 @@ public class SelectionController {
 	private StatusBarController statusBarController;
 
 	@Autowired
+	private WorkspaceDataService workspaceDataService;
+
+	@Autowired
 	private MainMenuBar mainMenuBar;
+
+	@Autowired
+	private AnalysisChartView analysisChartView;
 
 	private List<RowData> selectedPoints = null;
 	private List<TablePosition> selectedCells = null;
@@ -58,7 +71,8 @@ public class SelectionController {
 			tableGrid.setOnContextMenuRequested(event -> {
 				if(newPoints.size() > 1){
 					// show multi point selection
-					tableGrid.getMultiSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
+//					tableGrid.getMultiSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
+					analysisChartView.showAndUpdate();
 				}else{
 					// show single point selection
 					tableGrid.getSingleSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
@@ -84,7 +98,6 @@ public class SelectionController {
 		// update selected ones
 		selectedPoints = newPoints;
 	}
-
 
 	private void cellSelectAction(List<RowData> newPoints, List<TablePosition> newCells){
 
@@ -120,7 +133,30 @@ public class SelectionController {
 		return selectedCells;
 	}
 
-	public void unselectAction(){
+	public Table<Integer,Integer,ObservableValue> getCellValues(){
+
+		// get table positions
+		List<TablePosition> positions = getSelectedCells();
+		// results
+		Table<Integer,Integer,ObservableValue> result = HashBasedTable.create();
+
+		positions.forEach(tablePosition -> {
+			Integer rowNum = tablePosition.getRow();
+			Integer colNum = tablePosition.getColumn();
+
+			result.put(
+					rowNum,
+					colNum,
+					workspaceDataService
+							.getActiveDataSet().getPoints()
+							.get(rowNum).get(colNum)
+			);
+		});
+
+		return result;
+	}
+
+	public void unSelectAction(){
 
 		// remove all cells
 		selectedCells = FXCollections.emptyObservableList();

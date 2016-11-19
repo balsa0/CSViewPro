@@ -3,8 +3,6 @@ package com.csviewpro.controller.actioncontroller;
 import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.controller.view.TableGridController;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 

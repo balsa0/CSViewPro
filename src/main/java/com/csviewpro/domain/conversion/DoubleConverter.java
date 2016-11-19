@@ -14,7 +14,7 @@ public class DoubleConverter implements TypeConverter<Double>{
 
 		try {
 			return new DoubleStringConverter().fromString(s);
-		}catch (ClassCastException e){
+		}catch (Exception e){
 			return 0d;
 		}
 	}

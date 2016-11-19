@@ -1,5 +1,6 @@
 package com.csviewpro.domain.model;
 
+import com.csviewpro.domain.model.enumeration.ColumnRole;
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
@@ -50,6 +51,19 @@ public class HeaderDescriptor implements Serializable{
 
 	public Locale getNumberFormatLocale() {
 		return numberFormatLocale;
+	}
+
+	public Integer getColumIndexForRole(ColumnRole role){
+		return getDescriptorData().entrySet()
+				.stream()
+				// filter for only
+				.filter(entry -> role.equals(entry.getValue().getRole()))
+				// map it to index
+				.map(entry -> entry.getKey())
+				// return the first index
+				.findFirst()
+				// or null if no index has been found
+				.orElse(null);
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.csviewpro.controller.actioncontroller;
 
 import com.csviewpro.controller.view.StatusBarController;
+import com.csviewpro.domain.conversion.DoubleConverter;
+import com.csviewpro.domain.conversion.TypeConverter;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.menu.MainMenuBar;
@@ -12,6 +14,7 @@ import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,8 +47,8 @@ public class SelectionController {
 	@Autowired
 	private AnalysisChartView analysisChartView;
 
-	private List<RowData> selectedPoints = null;
-	private List<TablePosition> selectedCells = null;
+	private ObservableList<RowData> selectedPoints = null;
+	private ObservableList<TablePosition> selectedCells = null;
 
 	@PostConstruct
 	private void setup(){
@@ -56,10 +59,10 @@ public class SelectionController {
 			if(newSelection == null)
 				return;
 			// selected points
-			List<RowData> newPoints = tableGrid.getSelectionModel().getSelectedItems();
+			ObservableList<RowData> newPoints = tableGrid.getSelectionModel().getSelectedItems();
 
 			// selected cells
-			List<TablePosition> newCells = tableGrid.getSelectionModel().getSelectedCells();
+			ObservableList<TablePosition> newCells = tableGrid.getSelectionModel().getSelectedCells();
 
 			// numeric view action
 			numericViewAction();
@@ -87,7 +90,7 @@ public class SelectionController {
 
 	}
 
-	private void pointSelectAction(List<RowData> newPoints){
+	private void pointSelectAction(ObservableList<RowData> newPoints){
 
 		if(newPoints == null)
 			return;
@@ -99,7 +102,7 @@ public class SelectionController {
 		selectedPoints = newPoints;
 	}
 
-	private void cellSelectAction(List<RowData> newPoints, List<TablePosition> newCells){
+	private void cellSelectAction(ObservableList<RowData> newPoints, ObservableList<TablePosition> newCells){
 
 		// select points
 		pointSelectAction(newPoints);
@@ -125,22 +128,20 @@ public class SelectionController {
 		numericView.setRight(null);
 	}
 
-	public List<RowData> getSelectedPoints() {
+	public ObservableList<RowData> getSelectedPoints() {
 		return selectedPoints;
 	}
 
-	public List<TablePosition> getSelectedCells() {
+	public ObservableList<TablePosition> getSelectedCells() {
 		return selectedCells;
 	}
 
 	public Table<Integer,Integer,ObservableValue> getCellValues(){
 
-		// get table positions
-		List<TablePosition> positions = getSelectedCells();
 		// results
 		Table<Integer,Integer,ObservableValue> result = HashBasedTable.create();
 
-		positions.forEach(tablePosition -> {
+		getSelectedCells().forEach(tablePosition -> {
 			Integer rowNum = tablePosition.getRow();
 			Integer colNum = tablePosition.getColumn();
 
@@ -169,5 +170,15 @@ public class SelectionController {
 
 		// remove selection from table
 		tableGrid.getSelectionModel().clearSelection();
+	}
+
+	/**
+	 * Select a single row.
+	 * @param rowData
+	 */
+	public void selectRow(RowData rowData){
+		// do the selection in the table view, callback will do the rest
+		tableGrid.getSelectionModel().clearSelection();
+		tableGrid.getSelectionModel().select(rowData);
 	}
 }

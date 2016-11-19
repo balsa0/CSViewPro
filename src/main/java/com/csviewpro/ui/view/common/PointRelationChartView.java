@@ -7,16 +7,16 @@ import com.csviewpro.domain.conversion.DoubleConverter;
 import com.csviewpro.domain.conversion.TypeConverter;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.domain.model.enumeration.ColumnRole;
+import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.csviewpro.service.WorkspaceDataService;
-import com.google.common.collect.Table;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -24,7 +24,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.controlsfx.control.StatusBar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +36,7 @@ import java.util.Map;
  * Created by Balsa on 2016. 11. 18..
  */
 @Component
-public class AnalysisChartView{
+public class PointRelationChartView {
 
 	@Autowired
 	private SelectionController selectionController;
@@ -75,9 +74,9 @@ public class AnalysisChartView{
 	@PostConstruct
 	private void init(){
 		stage.setScene(scene);
-		stage.setTitle("Grafikus elemzés");
+		stage.setTitle("Pontok elhelyezkedése");
 		stage.getIcons().add(
-				imageUtil.getResourceIconImage("actions/chart_area_sm.png").getImage()
+				imageUtil.getResourceIconImage("actions/chart_scatter_sm.png").getImage()
 		);
 
 		// tooltip
@@ -97,83 +96,82 @@ public class AnalysisChartView{
 		clearChangeListeners();
 
 		// get selected values
-		Table<Integer, Integer, ObservableValue> selectedValues = selectionController.getCellValues();
+		ObservableList<RowData> selectedValues = selectionController.getSelectedPoints();
+
+		// extend selections to rows
+		selectionController.selectRowAction(selectedValues);
+
+		// get geodetic system
+		GeodeticSystem geodeticSystem = workspaceDataService
+				.getActiveDataSet()
+				.getHeaderDescriptor()
+				.getGeodeticSystem();
 
 		// set title
-		stage.setTitle("Grafikus elemzés (" + selectedValues.size() + " elem)");
+		stage.setTitle("Pontok elheyezkedése (" + selectedValues.size() + " pont)");
 
 		// create series from sets
 		// map <column index, series>
-		Map<Integer, XYChart.Series<String, Number>> chartSeries = new HashMap<>();
+		Map<String, XYChart.Series<Number, Number>> chartSeries = new HashMap<>();
 
-		// get name column index
+		// get point name index
 		Integer nameColumnIndex = workspaceDataService
 				.getActiveDataSet()
 				.getHeaderDescriptor()
 				.getColumIndexForRole(ColumnRole.POINTNAME);
 
-		// do the conversion for every cell
-		selectedValues.cellSet().forEach(cell -> {
+		// get point code index
+		Integer codeColumnIndex = workspaceDataService
+				.getActiveDataSet()
+				.getHeaderDescriptor()
+				.getColumIndexForRole(ColumnRole.POINTCODE);
 
-			Integer rowIndex = cell.getRowKey();
-			Integer columnIndex = cell.getColumnKey();
+		// get point x coordinate index
+		Integer xColumnIndex = workspaceDataService
+				.getActiveDataSet()
+				.getHeaderDescriptor()
+				.getColumIndexForRole(ColumnRole.XCOORDINATE);
+
+		// get point y coordinate index
+		Integer yColumnIndex = workspaceDataService
+				.getActiveDataSet()
+				.getHeaderDescriptor()
+				.getColumIndexForRole(ColumnRole.YCOORDINATE);
+
+		// do the conversion for every cell
+		for(RowData rowData : selectedValues){
+
+			String pointCode = String.valueOf(rowData.get(codeColumnIndex).getValue());
+			String pointName = String.valueOf(rowData.get(nameColumnIndex).getValue());
+
+			if(pointCode == null || "".equals(pointCode.trim()))
+				pointCode = "nincs kód";
 
 			// create or get series
 			XYChart.Series series;
-			if(chartSeries.containsKey(columnIndex)){
-				series = chartSeries.get(columnIndex);
+			if(chartSeries.containsKey(pointCode)){
+				series = chartSeries.get(pointCode);
 			}else{
 				// new series
 				series = new XYChart.Series();
-				// get name of the series
-				String columnName = workspaceDataService
-						.getActiveDataSet()
-						.getHeaderDescriptor()
-						.getDescriptorData()
-						.get(columnIndex)
-						.getName();
-
-				// if column name is not set
-				if(columnName == null || "".equals(columnName.trim())){
-					columnName = "" + columnIndex + ". oszlop";
-				}
-
-				// column name
-				series.setName(columnName);
+				series.setName(pointCode);
+				series.setData(FXCollections.observableArrayList());
 
 				// put the series to the map
-				chartSeries.put(columnIndex, series);
+				chartSeries.put(pointCode, series);
 			}
 
-			// get point from dataset
-			RowData rowData = workspaceDataService
-					.getActiveDataSet()
-					.getPoints()
-					// get the actual row from data set
-					.get(rowIndex);
-
-			// set point name
-			String pointName = "" + chartSeries.size();
-
-			// if name column is avaiable
-			if(nameColumnIndex != null){
-				pointName = rowData
-						// get it's name
-						.get(nameColumnIndex)
-						.getValue()
-						.toString();
-			}
-
-			// value of the cell
-			Object value = cell.getValue().getValue();
+			// get coordinates
+			Double xValue = (Double) rowData.get(xColumnIndex).getValue();
+			Double yValue = (Double) rowData.get(yColumnIndex).getValue();
 
 			// create XY data for chart
-			XYChart.Data data = new XYChart.Data(
-					pointName,
-					// convert types if necessary
-					Number.class.isAssignableFrom(value.getClass())
-							? value : doubleConverter.convert(value.toString())
-			);
+			XYChart.Data data;
+			if(geodeticSystem.equals(GeodeticSystem.EOV)){
+				data = new XYChart.Data(yValue, xValue);
+			}else{
+				data = new XYChart.Data(xValue, yValue);
+			}
 
 			// add the point to the data
 			data.setExtraValue(rowData);
@@ -188,14 +186,11 @@ public class AnalysisChartView{
 				if(!event.isShiftDown())
 					selectionController.unSelectAction();
 
-				if(event.isControlDown()){
-					selectionController.selectCellAction(rowIndex, columnIndex);
-				}else{
-					selectionController.selectRowAction((RowData) data.getExtraValue());
-					// edit if control is not down
-					if(!event.isShiftDown())
-						rowActionsController.editRowAction();
-				}
+				selectionController.selectRowAction((RowData) data.getExtraValue());
+
+				// edit if control is not down
+				if(!event.isShiftDown())
+					rowActionsController.editRowAction();
 
 			});
 
@@ -203,44 +198,60 @@ public class AnalysisChartView{
 			series.getData().add(data);
 
 			// add change listener to data
-			cell.getValue().addListener((observable, oldValue, newValue) -> {
-				data.setYValue(newValue);
-			});
+//			rowData.getValue().addListener((observable, oldValue, newValue) -> {
+//				data.setYValue(newValue);
+//			});
 
-		});
+		}
 
 		//defining the axes
-		final CategoryAxis xAxis = new CategoryAxis();
+		final NumberAxis xAxis = new NumberAxis();
 		xAxis.setAutoRanging(true);
+		xAxis.setForceZeroInRange(false);
+		xAxis.setLabel("X koordináta");
 
 		final NumberAxis yAxis = new NumberAxis();
 		yAxis.setAutoRanging(true);
 		yAxis.setForceZeroInRange(false);
+		yAxis.setLabel("Y koordináta");
 
 		// creating chart
-		final AreaChart<String,Number> lineChart = new AreaChart<>(
-				xAxis,
-				yAxis,
-				FXCollections.observableArrayList(chartSeries.values())
-		);
+		final ScatterChart<Number,Number> scatterChart;
+
+		if(geodeticSystem.equals(GeodeticSystem.EOV)){
+			scatterChart = new ScatterChart<>(
+					yAxis,
+					xAxis,
+					FXCollections.observableArrayList(chartSeries.values())
+			);
+		}else{
+			scatterChart = new ScatterChart<>(
+					xAxis,
+					yAxis,
+					FXCollections.observableArrayList(chartSeries.values())
+			);
+		}
 
 		// set up tooltip for mouse
-		lineChart.setOnMouseMoved(event -> {
+		scatterChart.setOnMouseMoved(event -> {
 			// get cursor value
+			Double cursorXValue = (Double) xAxis.getValueForDisplay(event.getX() - 15);
 			Double cursorYValue = (Double) yAxis.getValueForDisplay(event.getY() - 15);
 
 			// set tooltip text
-			cursorTooltip.setText(decimalFormat.format(cursorYValue));
+			cursorTooltip.setText(
+					geodeticSystem.name() + " ( Y:" + decimalFormat.format(cursorYValue)
+							+ ", X:" + decimalFormat.format(cursorXValue) + " )");
 
 			// show or hide tooltip
 			if (cursorYValue > yAxis.getLowerBound() && cursorYValue < yAxis.getUpperBound()){
-				cursorTooltip.show(lineChart, event.getScreenX() + 15, event.getScreenY() + 15);
+				cursorTooltip.show(scatterChart, event.getScreenX() + 15, event.getScreenY() + 15);
 			}else
 				cursorTooltip.hide();
 		});
 
 		// set chart as center item
-		borderPane.setCenter(lineChart);
+		borderPane.setCenter(scatterChart);
 
 		// show window
 		stage.show();
@@ -283,6 +294,7 @@ public class AnalysisChartView{
 			});
 
 		}
+
 	}
 
 	public void close(){

@@ -2,20 +2,19 @@ package com.csviewpro.controller.view;
 
 import com.csviewpro.controller.actioncontroller.RowActionsController;
 import com.csviewpro.controller.actioncontroller.SelectionController;
+import com.csviewpro.controller.actioncontroller.ViewActionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
+import com.csviewpro.ui.view.common.AnalysisChartView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +38,9 @@ public class TableGridController {
 
 	@Autowired
 	private RowActionsController rowActionsController;
+
+	@Autowired
+	private ViewActionController viewActionController;
 
 	@PostConstruct
 	private void init(){
@@ -242,12 +244,47 @@ public class TableGridController {
 			rowActionsController.deleteRowAction();
 		});
 
-		// add items to menu
+		// add items to single selection menu
 		tableGrid.getSingleSelectionContextMenu().getItems().addAll(
 				editPointMenu,
 				deletePointMenu
 		);
 
+		// graphical analysis menu
+		MenuItem graphicalAnalysisMenu = new MenuItem(
+				"Grafikus elemzés",
+				imageUtil.getResourceIconImage("actions/chart_area_sm.png")
+		);
+		graphicalAnalysisMenu.setOnAction(event -> {
+			viewActionController.graphicalAnalysisAction();
+		});
+
+		// point relation menu
+		MenuItem pointRelationMenu = new MenuItem(
+				"Térbeli elhelyezkedés",
+				imageUtil.getResourceIconImage("actions/chart_scatter_sm.png")
+		);
+		pointRelationMenu.setOnAction(event -> {
+			viewActionController.pointRelationAnalysis();
+		});
+
+		// delete points menu
+		MenuItem deletePointsMenu = new MenuItem(
+				"Pontok törlése",
+				imageUtil.getResourceIconImage("actions/delete_sm.png")
+		);
+		deletePointsMenu.setOnAction(event -> {
+			// delete the row
+			rowActionsController.deleteRowAction();
+		});
+
+		// add items to multi-selection menu
+		tableGrid.getMultiSelectionContextMenu().getItems().addAll(
+				graphicalAnalysisMenu,
+				pointRelationMenu,
+				new SeparatorMenuItem(),
+				deletePointsMenu
+		);
 	}
 
 

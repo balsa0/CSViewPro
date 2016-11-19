@@ -43,6 +43,7 @@ public class MainMenuBar extends MenuBar {
 	@Autowired
 	private ViewActionController viewActionController;
 
+
 	@Autowired
 	ImageUtil imageUtil;
 
@@ -65,9 +66,14 @@ public class MainMenuBar extends MenuBar {
 	private MenuItem viewMenu_numerical = new MenuItem("Táblázat nézet");
 	private MenuItem viewMenu_graphical = new MenuItem("Térkép nézet");
 
+	// tools
+	private Menu toolsMenu = new Menu("Eszközök");
+	private MenuItem toolsMenu_graphicalAnalysis = new MenuItem("Grafikus elemzés");
+	private MenuItem toolsMenu_pointRelation = new MenuItem("Térbeli elhelyezkedés");
+
 	// help
 	private Menu helpMenu = new Menu("Súgó");
-	private MenuItem helpMenu_cc = new MenuItem("Felhasznált ");
+	private MenuItem helpMenu_cc = new MenuItem("Creative Commons elismervények");
 	private MenuItem helpMenu_about = new MenuItem("Névjegy");
 
 	@PostConstruct
@@ -76,6 +82,7 @@ public class MainMenuBar extends MenuBar {
 		setupFileMenu();
 		setupEditMenu();
 		setupViewMenu();
+		setupToolsMenu();
 		setupHelpMenu();
 	}
 
@@ -84,6 +91,7 @@ public class MainMenuBar extends MenuBar {
 				fileMenu,
 				editMenu,
 				viewMenu,
+				toolsMenu,
 				helpMenu
 		);
 	}
@@ -169,6 +177,27 @@ public class MainMenuBar extends MenuBar {
 		);
 	}
 
+	private void setupToolsMenu(){
+		// tools menu
+		toolsMenu.setDisable(true);
+
+		// graphical analysis
+		toolsMenu_graphicalAnalysis.setGraphic(imageUtil.getResourceIconImage("actions/chart_area_sm.png"));
+		toolsMenu_graphicalAnalysis.setDisable(true);
+		toolsMenu_graphicalAnalysis.setOnAction(event -> viewActionController.graphicalAnalysisAction());
+
+		// relation analysis
+		toolsMenu_pointRelation.setGraphic(imageUtil.getResourceIconImage("actions/chart_scatter_sm.png"));
+		toolsMenu_pointRelation.setDisable(true);
+		toolsMenu_pointRelation.setOnAction(event -> viewActionController.pointRelationAnalysis());
+
+		toolsMenu.getItems().addAll(
+				toolsMenu_graphicalAnalysis,
+				toolsMenu_pointRelation
+		);
+
+	}
+
 	private void setupHelpMenu(){
 		// about menu
 		helpMenu_about.setGraphic(imageUtil.getResourceIconImage("actions/info_sm.png"));
@@ -195,6 +224,8 @@ public class MainMenuBar extends MenuBar {
 				editMenu.setDisable(true);
 				// disable view menu
 				viewMenu.setDisable(true);
+				// disable tools menu
+				toolsMenu.setDisable(true);
 
 				break;
 			case STATE_FILE_OPEN_NUMERIC:
@@ -205,6 +236,8 @@ public class MainMenuBar extends MenuBar {
 				editMenu.setDisable(false);
 				// enable view menu
 				viewMenu.setDisable(false);
+				// enable tools menu
+				toolsMenu.setDisable(false);
 
 				break;
 
@@ -231,18 +264,21 @@ public class MainMenuBar extends MenuBar {
 			editMenu_editRow.setDisable(true);
 			editMenu_deleteRow.setDisable(true);
 			editMenu_unselectAll.setDisable(true);
+			toolsMenu_graphicalAnalysis.setDisable(true);
+			toolsMenu_pointRelation.setDisable(true);
 		// if there are selected rows
 		}else{
 			editMenu_unselectAll.setDisable(false);
 			editMenu_editRow.setDisable(true);
 			editMenu_deleteRow.setDisable(true);
+			toolsMenu_graphicalAnalysis.setDisable(false);
+			toolsMenu_pointRelation.setDisable(false);
 		}
 
 		// if there are exactly 1 selected rows
 		if(selection.size() == 1){
 			editMenu_editRow.setDisable(false);
 			editMenu_deleteRow.setDisable(false);
-
 		}
 	}
 

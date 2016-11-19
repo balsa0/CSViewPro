@@ -77,12 +77,16 @@ public class RowActionsController {
 	}
 
 	public void deleteRowAction(){
+
 		// return if nothing is selected
 		if(selectionController.getSelectedPoints() == null ||
 				selectionController.getSelectedPoints().isEmpty())
 			return;
+
 		// delete the row
-		deleteRowAction(selectionController.getSelectedPoints().get(0));
+		for (RowData rowData : selectionController.getSelectedPoints()){
+			deleteRowAction(rowData);
+		}
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class RowActionsController {
 
 		// show question before deleting
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Fájlművelet sikertelen");
+		alert.setTitle("Törlés megerősítése");
 		alert.setHeaderText(null);
 		alert.setContentText("Biztosan törli a pontot?");
 

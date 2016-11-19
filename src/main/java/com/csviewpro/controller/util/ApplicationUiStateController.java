@@ -3,6 +3,8 @@ package com.csviewpro.controller.util;
 import com.csviewpro.ApplicationInitializer;
 import com.csviewpro.controller.view.MainLayoutController;
 import com.csviewpro.ui.menu.MainMenuBar;
+import com.csviewpro.ui.view.common.AnalysisChartView;
+import com.csviewpro.ui.view.common.PointRelationChartView;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

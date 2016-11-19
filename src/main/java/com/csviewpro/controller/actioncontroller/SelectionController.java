@@ -15,6 +15,7 @@ import com.google.common.collect.Tables;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,8 +75,7 @@ public class SelectionController {
 			tableGrid.setOnContextMenuRequested(event -> {
 				if(newPoints.size() > 1){
 					// show multi point selection
-//					tableGrid.getMultiSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
-					analysisChartView.showAndUpdate();
+					tableGrid.getMultiSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
 				}else{
 					// show single point selection
 					tableGrid.getSingleSelectionContextMenu().show(tableGrid, event.getScreenX(), event.getScreenY());
@@ -145,13 +145,15 @@ public class SelectionController {
 			Integer rowNum = tablePosition.getRow();
 			Integer colNum = tablePosition.getColumn();
 
-			result.put(
-					rowNum,
-					colNum,
-					workspaceDataService
-							.getActiveDataSet().getPoints()
-							.get(rowNum).get(colNum)
-			);
+			// skip for edit column
+			if(!colNum.equals(tableGrid.getColumns().size() -1))
+				result.put(
+						rowNum,
+						colNum,
+						workspaceDataService
+								.getActiveDataSet().getPoints()
+								.get(rowNum).get(colNum)
+				);
 		});
 
 		return result;
@@ -174,11 +176,27 @@ public class SelectionController {
 
 	/**
 	 * Select a single row.
-	 * @param rowData
+	 * @param rowData the row data of row to select.
 	 */
-	public void selectRow(RowData rowData){
+	public void selectRowAction(RowData rowData){
 		// do the selection in the table view, callback will do the rest
-		tableGrid.getSelectionModel().clearSelection();
 		tableGrid.getSelectionModel().select(rowData);
 	}
+
+	public void selectRowAction(List<RowData> rows){
+		// do the selection in the table view, callback will do the rest
+		rows.forEach(rowData -> {
+			tableGrid.getSelectionModel().select(rowData);
+		});
+	}
+
+
+	public void selectCellAction(Integer rowNum, Integer columnNum){
+		tableGrid.getSelectionModel().select(
+				rowNum,
+				(TableColumn) tableGrid.getColumns().get(columnNum)
+		);
+	}
+
+
 }

@@ -2,6 +2,8 @@ package com.csviewpro.controller.actioncontroller;
 
 import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.controller.view.TableGridController;
+import com.csviewpro.ui.view.common.AnalysisChartView;
+import com.csviewpro.ui.view.common.PointRelationChartView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,12 @@ public class ViewActionController {
 
 	@Autowired
 	private ApplicationUiStateController uiStateController;
+
+	@Autowired
+	private AnalysisChartView analysisChartView;
+
+	@Autowired
+	private PointRelationChartView pointRelationChartView;
 
 
 	public void refreshView(){
@@ -42,6 +50,14 @@ public class ViewActionController {
 			default:
 				break;
 		}
+	}
+
+	public void graphicalAnalysisAction(){
+		analysisChartView.showAndUpdate();
+	}
+
+	public void pointRelationAnalysis(){
+		pointRelationChartView.showAndUpdate();
 	}
 
 }

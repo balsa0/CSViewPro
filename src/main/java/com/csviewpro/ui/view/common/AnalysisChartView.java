@@ -4,12 +4,11 @@ import com.csviewpro.controller.actioncontroller.SelectionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.service.WorkspaceDataService;
 import com.google.common.collect.Table;
-import com.google.common.util.concurrent.JdkFutureAdapters;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;
@@ -113,14 +112,16 @@ public class AnalysisChartView{
 
 		//defining the axes
 		final NumberAxis xAxis = new NumberAxis();
+		xAxis.setAutoRanging(true);
+		xAxis.setForceZeroInRange(false);
+
 		final NumberAxis yAxis = new NumberAxis();
 		yAxis.setAutoRanging(true);
 		yAxis.setForceZeroInRange(false);
 
 		// creating chart
-		final LineChart<Number,Number> lineChart =
-				new LineChart<>(xAxis, yAxis, chartSeries);
-
+		final AreaChart<Number,Number> lineChart =
+				new AreaChart<>(xAxis, yAxis, chartSeries);
 
 		// set chart as center item
 		borderPane.setCenter(lineChart);

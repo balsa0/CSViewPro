@@ -54,7 +54,7 @@ public class CsvParserService {
 		if(preProcessed.size() == 0 )
 			throw new FileLoadingException("A megnyitni kívánt fájl üres (0 sort tartalmaz).");
 
-		log.debug("Detected columns: " + preProcessed.get(0).length + ", rows: " + preProcessed.size() + ".");
+		log.info("Detected columns: " + preProcessed.get(0).length + ", rows: " + preProcessed.size() + ".");
 
 		// then check if first row is the header
 		boolean firstRowContainsHeader = isHeader(preProcessed.get(0));
@@ -67,13 +67,13 @@ public class CsvParserService {
 			header = new ArrayList<>();
 
 		// display detected header
-		log.debug("Detected header: " + (header.size() == 0 ? "no header" : StringUtils.join(header,",")) + ".");
+		log.info("Detected header: " + (header.size() == 0 ? "no header" : StringUtils.join(header,",")) + ".");
 
 		// detect number format
 		Locale numberFormatLocale = detectDecimalFormatLocale(preProcessed);
 
 		// display detected locale
-		log.debug("Detected number format (locale): " + numberFormatLocale);
+		log.info("Detected number format (locale): " + numberFormatLocale);
 
 		// detect types
 		Map<Integer, Class> columnTypes = getColumnTypes(preProcessed);
@@ -91,12 +91,12 @@ public class CsvParserService {
 		// convert types of the data set
 		List<Object[]> data = convertTypes(preProcessed, columnTypes);
 
-		log.debug("Type parser finished");
+		log.info("Type parser finished");
 
 		// analyze header information
 		HeaderDescriptor headerDescriptor = analyzeHeader(data, columnTypes, header, numberFormatLocale);
 
-		log.debug("Header descriptor created: " + headerDescriptor);
+		log.info("Header descriptor created: " + headerDescriptor);
 
 		// assemble the data set
 		return assembleDataSet(headerDescriptor, data);

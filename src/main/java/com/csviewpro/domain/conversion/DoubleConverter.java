@@ -1,6 +1,6 @@
 package com.csviewpro.domain.conversion;
 
-import javafx.util.converter.NumberStringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
 /**
  * Created by Balsa on 2016. 11. 01..
@@ -13,7 +13,7 @@ public class DoubleConverter implements TypeConverter<Double>{
 			return 0d;
 
 		try {
-			return new NumberStringConverter().fromString(s).doubleValue();
+			return new DoubleStringConverter().fromString(s);
 		}catch (ClassCastException e){
 			return 0d;
 		}

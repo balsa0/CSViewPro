@@ -88,6 +88,15 @@ public class PointRelationChartView {
 			clearChangeListeners();
 		});
 
+		stage.setOnCloseRequest(event -> {
+			// clear change listeners
+			clearChangeListeners();
+		});
+
+		scene.setOnMouseExited(event -> {
+			cursorTooltip.hide();
+		});
+
 	}
 
 	public void showAndUpdate(){
@@ -141,11 +150,20 @@ public class PointRelationChartView {
 		// do the conversion for every cell
 		for(RowData rowData : selectedValues){
 
-			String pointCode = String.valueOf(rowData.get(codeColumnIndex).getValue());
-			String pointName = String.valueOf(rowData.get(nameColumnIndex).getValue());
+			String pointCode = null;
+			String pointName = null;
+
+			if(codeColumnIndex != null)
+				pointCode = rowData.get(codeColumnIndex).getValue().toString();
+
+			if(nameColumnIndex != null)
+				pointName = rowData.get(nameColumnIndex).getValue().toString();
 
 			if(pointCode == null || "".equals(pointCode.trim()))
 				pointCode = "nincs kód";
+
+			if(pointName == null || "".equals(pointName.trim()))
+				pointName = "névtelen pont";
 
 			// create or get series
 			XYChart.Series series;

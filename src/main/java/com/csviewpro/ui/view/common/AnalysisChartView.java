@@ -89,6 +89,15 @@ public class AnalysisChartView{
 			clearChangeListeners();
 		});
 
+		stage.setOnCloseRequest(event -> {
+			// clear change listeners
+			clearChangeListeners();
+		});
+
+		scene.setOnMouseExited(event -> {
+			cursorTooltip.hide();
+		});
+
 	}
 
 	public void showAndUpdate(){

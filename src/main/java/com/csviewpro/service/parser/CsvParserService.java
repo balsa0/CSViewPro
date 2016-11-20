@@ -419,6 +419,10 @@ public class CsvParserService {
 				}
 			}
 
+			// invalidate point code matches if all values are the same;
+			if(pCodeBag.isEmpty() || pCodeBag.size() == 1)
+				pCodeCount = 0;
+
 			// create new list for storing possible roles
 			List<Long> activeList = new ArrayList<>();
 
@@ -436,13 +440,7 @@ public class CsvParserService {
 			activeList.add(unknownCount);
 
 			// evaluate results
-			Long max = Arrays.asList(
-				pNameCount,
-				pCodeCount,
-				pXCount,
-				pYCount,
-				pZCount,
-				unknownCount)
+			Long max = activeList
 					.stream()
 					.max(Long::compareTo)
 					.get();
@@ -452,6 +450,11 @@ public class CsvParserService {
 			try {
 				title = header.get(i);
 			}catch(IndexOutOfBoundsException e){/*Ignore*/}
+
+			// if max is zero
+			if(max == 0){
+				descriptorData.put(i, new ColumnDescriptor(columnClass, title, ColumnRole.OTHER));
+			}
 
 			// column is point name
 			if(max == pNameCount && !takenRoles.contains(ColumnRole.POINTNAME)){

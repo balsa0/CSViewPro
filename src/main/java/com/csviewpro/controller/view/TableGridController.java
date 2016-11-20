@@ -9,6 +9,7 @@ import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.view.common.AnalysisChartView;
+import com.csviewpro.ui.view.numeric.assets.NumericViewStatusBar;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.collections.FXCollections;
@@ -41,6 +42,9 @@ public class TableGridController {
 
 	@Autowired
 	private ViewActionController viewActionController;
+
+	@Autowired
+	private NumericViewStatusBar numericViewStatusBar;
 
 	@PostConstruct
 	private void init(){
@@ -80,18 +84,22 @@ public class TableGridController {
 				dataSet.getPoints()
 		);
 
-		// on right click
-		tableGrid.setOnContextMenuRequested(event -> {
-
-
-
-		});
+//		// on right click
+//		tableGrid.setOnContextMenuRequested(event -> {
+//
+//
+//
+//		});
 
 		// disable reordering
 		tableGrid.widthProperty().addListener((source, oldWidth, newWidth) -> {
 			TableHeaderRow header = (TableHeaderRow) tableGrid.lookup("TableHeaderRow");
 			header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
 		});
+
+		// request update for status bar
+		numericViewStatusBar.updateGeodeticSystem();
+
 	}
 
 	public void clearTable(){

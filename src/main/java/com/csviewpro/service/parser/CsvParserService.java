@@ -318,6 +318,12 @@ public class CsvParserService {
 			long pZCount = 0;
 			long unknownCount = 0;
 
+			// if this is a double column, then it should not be a name or code column
+			if(columnClass == Double.class){
+				pNameCount = Long.MIN_VALUE;
+				pCodeCount = Long.MIN_VALUE;
+			}
+
 			Set<String> pCodeBag = new HashSet<>();
 
 			// iterate over rows
@@ -348,9 +354,10 @@ public class CsvParserService {
 								act.doubleValue() <= geodeticSystem.getxMax()){
 							pXCount++;
 							// count the geodetic system
-							geodeticSystemMatchMap.replace(
-									geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
-							);
+							if(act.doubleValue() != 0.0)
+								geodeticSystemMatchMap.replace(
+										geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
+								);
 						}
 
 						// check for Y coordinate
@@ -358,25 +365,25 @@ public class CsvParserService {
 								act.doubleValue() <= geodeticSystem.getyMax()){
 							pYCount++;
 							// count the geodetic system
-							geodeticSystemMatchMap.replace(
-									geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
-							);
+							if(act.doubleValue() != 0.0)
+								geodeticSystemMatchMap.replace(
+										geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
+								);
 						}
 
 						// check for relative Z coordinate
 						if(act.doubleValue() >= -50.0 &&
-								act.doubleValue() <= 50.0){
+								act.doubleValue() <= 400.0){
 							pZCount++;
-						}
-
 						// check for absolute Z coordinate
-						if(act.doubleValue() >= geodeticSystem.getzMin() &&
+						}else if(act.doubleValue() >= geodeticSystem.getzMin() &&
 								act.doubleValue() <= geodeticSystem.getzMax()){
 							pZCount++;
 							// count the geodetic system
-							geodeticSystemMatchMap.replace(
-									geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
-							);
+							if(act.doubleValue() != 0.0)
+								geodeticSystemMatchMap.replace(
+										geodeticSystem, geodeticSystemMatchMap.get(geodeticSystem) + 1
+								);
 						}
 					}
 

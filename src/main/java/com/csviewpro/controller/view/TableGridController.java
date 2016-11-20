@@ -1,14 +1,12 @@
 package com.csviewpro.controller.view;
 
 import com.csviewpro.controller.actioncontroller.RowActionsController;
-import com.csviewpro.controller.actioncontroller.SelectionController;
 import com.csviewpro.controller.actioncontroller.ViewActionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
-import com.csviewpro.ui.view.common.AnalysisChartView;
 import com.csviewpro.ui.view.numeric.assets.NumericViewStatusBar;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
@@ -98,7 +96,7 @@ public class TableGridController {
 		});
 
 		// request update for status bar
-		numericViewStatusBar.updateGeodeticSystem();
+		numericViewStatusBar.updateIcons();
 
 	}
 

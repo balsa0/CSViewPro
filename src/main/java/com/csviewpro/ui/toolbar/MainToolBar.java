@@ -44,6 +44,7 @@ public class MainToolBar extends ToolBar {
 		getItems().addAll(
 				mapViewButton
 		);
+
 	}
 
 

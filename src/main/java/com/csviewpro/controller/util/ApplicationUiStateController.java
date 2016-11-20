@@ -96,6 +96,20 @@ public class ApplicationUiStateController {
 		setActiveState(UiState.STATE_FILE_OPEN_NUMERIC);
 	}
 
+	public void switchToGraphicViewState(){
+		// activate main layout
+		mainLayoutController.activateGraphicView();
+		// set state
+		setActiveState(UiState.STATE_FILE_OPEN_GRAPHIC);
+	}
+
+
+	public void switchToNumericViewState(){
+		// activate main layout
+		mainLayoutController.activateNumericView();
+		// set state
+		setActiveState(UiState.STATE_FILE_OPEN_NUMERIC);
+	}
 
 
 	/**

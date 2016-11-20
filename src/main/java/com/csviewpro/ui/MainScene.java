@@ -16,7 +16,8 @@ public class MainScene extends Scene{
 
 	private void setStyleSheets(){
 		getStylesheets().addAll(
-				getStyleRef("tableview.css")
+				getStyleRef("tableview.css"),
+				getStyleRef("mapview.css")
 		);
 	}
 

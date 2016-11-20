@@ -163,8 +163,14 @@ public class MainMenuBar extends MenuBar {
 		viewMenu_reload.setOnAction(event -> viewActionController.reloadView());
 		// numerical view
 		viewMenu_numerical.setGraphic(imageUtil.getResourceIconImage("actions/numeric_sm.png"));
+		viewMenu_numerical.setOnAction(event -> {
+			applicationContext.getBean(ApplicationUiStateController.class).switchToNumericViewState();
+		});
 		// graphical
 		viewMenu_graphical.setGraphic(imageUtil.getResourceIconImage("actions/map_sm.png"));
+		viewMenu_graphical.setOnAction(event -> {
+			applicationContext.getBean(ApplicationUiStateController.class).switchToGraphicViewState();
+		});
 
 		// add items
 		viewMenu.getItems().addAll(

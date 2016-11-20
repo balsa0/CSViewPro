@@ -4,6 +4,7 @@ import com.csviewpro.ui.MainLayout;
 import com.csviewpro.ui.view.common.AnalysisChartView;
 import com.csviewpro.ui.view.common.FileHistoryView;
 import com.csviewpro.ui.view.common.PointRelationChartView;
+import com.csviewpro.ui.view.graphic.GraphicView;
 import com.csviewpro.ui.view.numeric.NumericView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class MainLayoutController {
 	private NumericView numericView;
 
 	@Autowired
+	private GraphicView graphicView;
+
+	@Autowired
 	private AnalysisChartView analysisChartView;
 
 	@Autowired
@@ -37,6 +41,13 @@ public class MainLayoutController {
 	}
 
 	/**
+	 * This method sets main layout state to graphic view.
+	 */
+	public void activateGraphicView(){
+		mainLayout.setCenter(graphicView);
+	}
+
+	/**
 	 * This method sets main layout state to file history view.
 	 */
 	public void activateFileHistoryView(){
@@ -46,6 +57,7 @@ public class MainLayoutController {
 		analysisChartView.close();
 		pointRelationChartView.close();
 	}
+
 
 
 

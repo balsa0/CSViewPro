@@ -1,10 +1,7 @@
 package com.csviewpro.ui.menu;
 
-import com.csviewpro.controller.actioncontroller.RowActionsController;
-import com.csviewpro.controller.actioncontroller.SelectionController;
-import com.csviewpro.controller.actioncontroller.ViewActionController;
+import com.csviewpro.controller.actioncontroller.*;
 import com.csviewpro.controller.util.ApplicationUiStateController;
-import com.csviewpro.controller.actioncontroller.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.RowData;
 import javafx.scene.control.Menu;
@@ -35,6 +32,9 @@ public class MainMenuBar extends MenuBar {
 	private LoadController loadController;
 
 	@Autowired
+	private SaveController saveController;
+
+	@Autowired
 	private RowActionsController rowActionsController;
 
 	@Autowired
@@ -50,6 +50,7 @@ public class MainMenuBar extends MenuBar {
 	// file
 	private Menu fileMenu = new Menu("Fájl");
 	private MenuItem fileMenu_open = new MenuItem("Megnyitás...");
+	private MenuItem fileMenu_exportExcel = new MenuItem("Exportálás excel fájlba...");
 	private MenuItem fileMenu_close = new MenuItem("Fájl bezárása");
 	private MenuItem fileMenu_exit = new MenuItem("Kilépés");
 
@@ -104,6 +105,13 @@ public class MainMenuBar extends MenuBar {
 		});
 		fileMenu_open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
 
+		// excel export item
+		fileMenu_exportExcel.setDisable(true);
+		fileMenu_exportExcel.setGraphic(imageUtil.getResourceIconImage("actions/excel_md.png"));
+		fileMenu_exportExcel.setOnAction(event -> {
+			saveController.exportExcelAction();
+		});
+
 		// close file item
 		fileMenu_close.setDisable(true);
 		fileMenu_close.setGraphic(imageUtil.getResourceIconImage("actions/close_sm.png"));
@@ -120,6 +128,8 @@ public class MainMenuBar extends MenuBar {
 		// populate file menu
 		fileMenu.getItems().addAll(
 				fileMenu_open,
+				new SeparatorMenuItem(),
+				fileMenu_exportExcel,
 				new SeparatorMenuItem(),
 				fileMenu_close,
 				new SeparatorMenuItem(),
@@ -226,6 +236,8 @@ public class MainMenuBar extends MenuBar {
 			case STATE_FILEHISTORY:
 				// disable close file menu
 				fileMenu_close.setDisable(true);
+				// disable export menus
+				fileMenu_exportExcel.setDisable(true);
 				// disable edit menu
 				editMenu.setDisable(true);
 				// disable view menu
@@ -238,6 +250,8 @@ public class MainMenuBar extends MenuBar {
 			case STATE_FILE_OPEN_GRAPHIC:
 				// enable close file menu
 				fileMenu_close.setDisable(false);
+				// enable export menus
+				fileMenu_exportExcel.setDisable(false);
 				// enable edit menu
 				editMenu.setDisable(false);
 				// enable view menu

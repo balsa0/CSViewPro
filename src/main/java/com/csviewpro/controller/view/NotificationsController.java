@@ -19,6 +19,12 @@ public class NotificationsController {
 		notificationsWrapperLayout.show();
 	}
 
+	public void showExportNotification(String fileName){
+		notificationsWrapperLayout.setCloseButtonVisible(false);
+		notificationsWrapperLayout.setText(" Exportálás - "+fileName);
+		notificationsWrapperLayout.show();
+	}
+
 	public void hide(){
 		notificationsWrapperLayout.hide();
 	}

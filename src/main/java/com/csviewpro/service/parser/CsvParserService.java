@@ -4,7 +4,7 @@ import com.csviewpro.domain.exception.FileLoadingException;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;
 import com.csviewpro.domain.model.RowData;
-import com.csviewpro.domain.model.HeaderDescriptor;
+import com.csviewpro.domain.model.DataSetMetaData;
 import com.csviewpro.domain.model.enumeration.ColumnRole;
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.univocity.parsers.csv.CsvParser;
@@ -94,12 +94,12 @@ public class CsvParserService {
 		log.info("Type parser finished");
 
 		// analyze header information
-		HeaderDescriptor headerDescriptor = analyzeHeader(data, columnTypes, header, numberFormatLocale);
+		DataSetMetaData dataSetMetaData = analyzeHeader(data, columnTypes, header, numberFormatLocale);
 
-		log.info("Header descriptor created: " + headerDescriptor);
+		log.info("Header descriptor created: " + dataSetMetaData);
 
 		// assemble the data set
-		return assembleDataSet(headerDescriptor, data);
+		return assembleDataSet(dataSetMetaData, data);
 
 	}
 
@@ -279,7 +279,7 @@ public class CsvParserService {
 	 * @param numberFormat the detected number format.
 	 * @return
 	 */
-	private HeaderDescriptor analyzeHeader(
+	private DataSetMetaData analyzeHeader(
 			List<Object[]> data,
 			Map<Integer, Class> columnTypes,
 			List<String> header,
@@ -510,16 +510,16 @@ public class CsvParserService {
 		}
 
 		// assembling header descriptor
-		return new HeaderDescriptor(descriptorData, detected, numberFormat);
+		return new DataSetMetaData(descriptorData, detected, numberFormat);
 	}
 
 	/**
-	 * Creates a data set from a headerDescriptor and a list of arrays.
-	 * @param headerDescriptor the {@link HeaderDescriptor} that stores header data.
+	 * Creates a data set from a dataSetMetaData and a list of arrays.
+	 * @param dataSetMetaData the {@link DataSetMetaData} that stores header data.
 	 * @param data the data to use.
-	 * @return a new {@link DataSet} from data and headerDescriptor.
+	 * @return a new {@link DataSet} from data and dataSetMetaData.
 	 */
-	private DataSet assembleDataSet(HeaderDescriptor headerDescriptor, List<Object[]> data){
+	private DataSet assembleDataSet(DataSetMetaData dataSetMetaData, List<Object[]> data){
 
 		// create empty list for the points
 		List<RowData> pointList = new LinkedList<>();
@@ -545,11 +545,11 @@ public class CsvParserService {
 					ObservableValue propertyValue;
 
 					// convert cell value to observable value
-					if(headerDescriptor.getDescriptorData().get(i).getType().equals(String.class))
+					if(dataSetMetaData.getDescriptorData().get(i).getType().equals(String.class))
 						propertyValue = new SimpleStringProperty((String) cell);
-					else if(headerDescriptor.getDescriptorData().get(i).getType().equals(Long.class))
+					else if(dataSetMetaData.getDescriptorData().get(i).getType().equals(Long.class))
 						propertyValue = new SimpleLongProperty((Long) cell);
-					else if(headerDescriptor.getDescriptorData().get(i).getType().equals(Double.class))
+					else if(dataSetMetaData.getDescriptorData().get(i).getType().equals(Double.class))
 						propertyValue = new SimpleDoubleProperty((Double) cell);
 					else
 						propertyValue = new SimpleStringProperty(cell.toString());
@@ -567,7 +567,7 @@ public class CsvParserService {
 
 		}
 
-		return new DataSet(headerDescriptor, FXCollections.observableArrayList(pointList));
+		return new DataSet(dataSetMetaData, FXCollections.observableArrayList(pointList));
 	}
 
 

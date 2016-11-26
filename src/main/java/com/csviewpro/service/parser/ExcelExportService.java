@@ -1,6 +1,6 @@
 package com.csviewpro.service.parser;
 
-import com.csviewpro.domain.model.HeaderDescriptor;
+import com.csviewpro.domain.model.DataSetMetaData;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
 import jxl.Workbook;
@@ -44,7 +44,7 @@ public class ExcelExportService {
 		List<RowData> rawData = workspaceDataService.getActiveDataSet().getPoints();
 
 		// get header descriptor
-		HeaderDescriptor headerDescriptor = workspaceDataService.getActiveDataSet().getHeaderDescriptor();
+		DataSetMetaData dataSetMetaData = workspaceDataService.getActiveDataSet().getDataSetMetaData();
 
 		// go trough every row
 		for (int i = 0; i < rawData.size(); i++) {
@@ -56,7 +56,7 @@ public class ExcelExportService {
 				Object cellValue = row.get(j).getValue();
 
 				// get actual column class
-				Class columnClass = headerDescriptor.getDescriptorData().get(j).getType();
+				Class columnClass = dataSetMetaData.getDescriptorData().get(j).getType();
 
 				// create a cell
 				WritableCell cell;

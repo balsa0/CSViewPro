@@ -1,12 +1,11 @@
 package com.csviewpro.ui.view.common;
 
 import com.csviewpro.domain.model.ColumnDescriptor;
-import com.csviewpro.domain.model.HeaderDescriptor;
+import com.csviewpro.domain.model.DataSetMetaData;
 import com.csviewpro.domain.model.RowData;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.Editors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,24 +19,24 @@ public class PointEditorSheet extends PropertySheet {
 
 	// / editable properties
 	private RowData point;
-	private HeaderDescriptor headerDescriptor;
+	private DataSetMetaData dataSetMetaData;
 
 	public RowData getPoint() {
 		return point;
 	}
 
-	public HeaderDescriptor getHeaderDescriptor() {
-		return headerDescriptor;
+	public DataSetMetaData getDataSetMetaData() {
+		return dataSetMetaData;
 	}
 
-	public PointEditorSheet(RowData point, HeaderDescriptor headerDescriptor) {
+	public PointEditorSheet(RowData point, DataSetMetaData dataSetMetaData) {
 		this.point = point;
-		this.headerDescriptor = headerDescriptor;
+		this.dataSetMetaData = dataSetMetaData;
 
 		List<PointEditorItem> items = new ArrayList<>();
 
 		// go trough every column
-		for(Map.Entry entry : headerDescriptor.getDescriptorData().entrySet()){
+		for(Map.Entry entry : dataSetMetaData.getDescriptorData().entrySet()){
 			items.add(
 					new PointEditorItem(
 							(ColumnDescriptor) entry.getValue(),

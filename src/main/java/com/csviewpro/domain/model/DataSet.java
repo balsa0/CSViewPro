@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.collections.ObservableList;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * This class represents a data set with metadata.
@@ -14,7 +13,7 @@ public class DataSet implements Serializable{
 
 	// header metadata
 	@JsonProperty
-	private HeaderDescriptor headerDescriptor;
+	private DataSetMetaData dataSetMetaData;
 
 	// points data
 	@JsonProperty
@@ -22,20 +21,20 @@ public class DataSet implements Serializable{
 
 	/**
 	 * This constructor creates a data set.
-	 * @param headerDescriptor the header descriptor metadata.
+	 * @param dataSetMetaData the header descriptor metadata.
 	 * @param points the points to store.
 	 */
-	public DataSet(HeaderDescriptor headerDescriptor, ObservableList<RowData> points) {
-		this.headerDescriptor = headerDescriptor;
+	public DataSet(DataSetMetaData dataSetMetaData, ObservableList<RowData> points) {
+		this.dataSetMetaData = dataSetMetaData;
 		this.points = points;
 	}
 
-	public HeaderDescriptor getHeaderDescriptor() {
-		return headerDescriptor;
+	public DataSetMetaData getDataSetMetaData() {
+		return dataSetMetaData;
 	}
 
-	public void setHeaderDescriptor(HeaderDescriptor headerDescriptor) {
-		this.headerDescriptor = headerDescriptor;
+	public void setDataSetMetaData(DataSetMetaData dataSetMetaData) {
+		this.dataSetMetaData = dataSetMetaData;
 	}
 
 	public ObservableList<RowData> getPoints() {

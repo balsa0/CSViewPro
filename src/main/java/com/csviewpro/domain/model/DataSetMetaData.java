@@ -7,14 +7,13 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 /**
  * Created by Balsa on 2016. 10. 31..
  */
-public class HeaderDescriptor implements Serializable{
+public class DataSetMetaData implements Serializable{
 
 	@JsonProperty("descriptors")
 	private Map<Integer, ColumnDescriptor> descriptorData;
@@ -31,7 +30,7 @@ public class HeaderDescriptor implements Serializable{
 	 * @param geodeticSystem the detected geodetic system.
 	 * @param numberFormatLocale the detected number format locale.
 	 */
-	public HeaderDescriptor(
+	public DataSetMetaData(
 			Map<Integer, ColumnDescriptor> descriptorData,
 			GeodeticSystem geodeticSystem,
 			Locale numberFormatLocale
@@ -79,7 +78,7 @@ public class HeaderDescriptor implements Serializable{
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		HeaderDescriptor that = (HeaderDescriptor) o;
+		DataSetMetaData that = (DataSetMetaData) o;
 		return Objects.equal(descriptorData, that.descriptorData) &&
 				geodeticSystem == that.geodeticSystem &&
 				Objects.equal(numberFormatLocale, that.numberFormatLocale);

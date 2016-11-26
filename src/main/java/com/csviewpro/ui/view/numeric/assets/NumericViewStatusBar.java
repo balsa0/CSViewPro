@@ -55,7 +55,7 @@ public class NumericViewStatusBar extends StatusBar{
 	public void updateIcons(){
 
 		// get active geodetic system
-		GeodeticSystem geodeticSystem = workspaceDataService.getActiveDataSet().getHeaderDescriptor().getGeodeticSystem();
+		GeodeticSystem geodeticSystem = workspaceDataService.getActiveDataSet().getDataSetMetaData().getGeodeticSystem();
 
 		if(geodeticSystem == null){
 			geodeticSystemLabel.setText("Ismeretlen vetületi rendszer");

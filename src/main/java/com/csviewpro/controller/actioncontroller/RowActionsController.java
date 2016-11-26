@@ -60,7 +60,7 @@ public class RowActionsController {
 		if(UiState.STATE_FILE_OPEN_NUMERIC.equals(applicationUiStateController.getActiveState())){
 			// create property editor for the row
 			activeEditor = new PointEditorSheet(
-					row, workspaceDataService.getActiveDataSet().getHeaderDescriptor()
+					row, workspaceDataService.getActiveDataSet().getDataSetMetaData()
 			);
 
 			// highlight the row

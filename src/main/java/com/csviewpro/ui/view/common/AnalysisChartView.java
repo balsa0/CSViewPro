@@ -24,7 +24,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.controlsfx.control.StatusBar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -118,7 +117,7 @@ public class AnalysisChartView{
 		// get name column index
 		Integer nameColumnIndex = workspaceDataService
 				.getActiveDataSet()
-				.getHeaderDescriptor()
+				.getDataSetMetaData()
 				.getColumIndexForRole(ColumnRole.POINTNAME);
 
 		// do the conversion for every cell
@@ -137,7 +136,7 @@ public class AnalysisChartView{
 				// get name of the series
 				String columnName = workspaceDataService
 						.getActiveDataSet()
-						.getHeaderDescriptor()
+						.getDataSetMetaData()
 						.getDescriptorData()
 						.get(columnIndex)
 						.getName();

@@ -64,7 +64,7 @@ public class TableGridController {
 		//http://stackoverflow.com/questions/29489366/how-to-add-button-in-javafx-table-view
 
 		// start building the table
-		dataSet.getHeaderDescriptor().getDescriptorData()
+		dataSet.getDataSetMetaData().getDescriptorData()
 				.entrySet()
 				.stream()
 				.forEach(entry -> {

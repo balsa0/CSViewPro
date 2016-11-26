@@ -113,7 +113,7 @@ public class PointRelationChartView {
 		// get geodetic system
 		GeodeticSystem geodeticSystem = workspaceDataService
 				.getActiveDataSet()
-				.getHeaderDescriptor()
+				.getDataSetMetaData()
 				.getGeodeticSystem();
 
 		// set title
@@ -126,25 +126,25 @@ public class PointRelationChartView {
 		// get point name index
 		Integer nameColumnIndex = workspaceDataService
 				.getActiveDataSet()
-				.getHeaderDescriptor()
+				.getDataSetMetaData()
 				.getColumIndexForRole(ColumnRole.POINTNAME);
 
 		// get point code index
 		Integer codeColumnIndex = workspaceDataService
 				.getActiveDataSet()
-				.getHeaderDescriptor()
+				.getDataSetMetaData()
 				.getColumIndexForRole(ColumnRole.POINTCODE);
 
 		// get point x coordinate index
 		Integer xColumnIndex = workspaceDataService
 				.getActiveDataSet()
-				.getHeaderDescriptor()
+				.getDataSetMetaData()
 				.getColumIndexForRole(ColumnRole.XCOORDINATE);
 
 		// get point y coordinate index
 		Integer yColumnIndex = workspaceDataService
 				.getActiveDataSet()
-				.getHeaderDescriptor()
+				.getDataSetMetaData()
 				.getColumIndexForRole(ColumnRole.YCOORDINATE);
 
 		// do the conversion for every cell

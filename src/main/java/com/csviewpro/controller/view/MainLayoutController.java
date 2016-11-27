@@ -2,6 +2,7 @@ package com.csviewpro.controller.view;
 
 import com.csviewpro.ui.MainLayout;
 import com.csviewpro.ui.view.common.AnalysisChartView;
+import com.csviewpro.ui.view.common.DistanceMatrixView;
 import com.csviewpro.ui.view.common.FileHistoryView;
 import com.csviewpro.ui.view.common.PointRelationChartView;
 import com.csviewpro.ui.view.graphic.GraphicView;
@@ -33,6 +34,9 @@ public class MainLayoutController {
 	@Autowired
 	private PointRelationChartView pointRelationChartView;
 
+	@Autowired
+	private DistanceMatrixView distanceMatrixView;
+
 	/**
 	 * This method sets main layout state to numeric view.
 	 */
@@ -56,6 +60,7 @@ public class MainLayoutController {
 		// close tool windows
 		analysisChartView.close();
 		pointRelationChartView.close();
+		distanceMatrixView.close();
 	}
 
 

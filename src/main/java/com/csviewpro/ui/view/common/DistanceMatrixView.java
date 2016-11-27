@@ -7,6 +7,7 @@ import com.csviewpro.domain.model.RowData;
 import com.csviewpro.domain.model.enumeration.ColumnRole;
 import com.csviewpro.domain.model.enumeration.GeodeticSystem;
 import com.csviewpro.service.WorkspaceDataService;
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -111,12 +112,21 @@ public class DistanceMatrixView{
 	private TableView buildDistanceMatrix(ObservableList<RowData> data){
 
 		// create table
-		TableView resultView = new TableView(data);
+		TableView resultView = new TableView();
+
+		// adding all items
+		resultView.getItems().addAll(data);
 
 		// set properties for table view
 		resultView.setEditable(false);
 		resultView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		resultView.getSelectionModel().setCellSelectionEnabled(true);
+
+		// disable reordering
+		resultView.widthProperty().addListener((source, oldWidth, newWidth) -> {
+			TableHeaderRow header = (TableHeaderRow) resultView.lookup("TableHeaderRow");
+			header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
+		});
 
 		// get point name index
 		Integer nameColumnIndex = workspaceDataService
@@ -217,7 +227,7 @@ public class DistanceMatrixView{
 	){
 
 		// create selection listener
-		tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		tableView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 
 			// selected cells
 			ObservableList<TablePosition> selectedCells = tableView.getSelectionModel().getSelectedCells();
@@ -289,19 +299,13 @@ public class DistanceMatrixView{
 			);
 			statusBar.getLeftItems().add(deltaXLabel);
 
-			// delta δ
-			double delta = Math.toDegrees(Math.atan(dy/dx));
-			// turn around
-			if(delta < 0)
-				delta += 360.0;
+			// heading angle
+			double heading = GeoMath.headingAngle(dx, dy);
+			String headingDMS = GeoMath.formatDegreeToDMS(heading);
 
-			// the label of the
-			String label = "δ = "+decimalFormat.format(delta)+"°";
-
-			if(((Double) delta).isNaN())
-				label = "δ = 0°";
-
-			Label deltaAngleLabel = new Label(label);
+			Label deltaAngleLabel = new Label(
+					"δ = " + headingDMS + " (" + decimalFormat.format(heading) + "°)"
+			);
 			deltaAngleLabel.setPadding(new Insets(2,6,1,2));
 			deltaAngleLabel.setGraphic(
 					imageUtil.getResourceIconImage("actions/degree_sm.png")
@@ -310,6 +314,9 @@ public class DistanceMatrixView{
 
 		});
 
+	}
 
+	public void close(){
+		stage.close();
 	}
 }

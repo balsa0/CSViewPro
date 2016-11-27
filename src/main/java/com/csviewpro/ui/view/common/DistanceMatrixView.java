@@ -251,6 +251,11 @@ public class DistanceMatrixView{
 			RowData columnPoint = data.get(position.getColumn() - 1); // -1 is for ignoring the first column
 			RowData rowPoint = data.get(position.getRow());
 
+			// select the two points on the main table
+//			selectionController.unSelectAction();
+//			selectionController.selectRowAction(columnPoint);
+//			selectionController.selectRowAction(rowPoint);
+
 			// get point data for every point
 			String pointName1 = null;
 			String pointName2 = null;
@@ -267,7 +272,7 @@ public class DistanceMatrixView{
 				pointName2 = "névtelen pont";
 
 			// add status bar column for names
-			Label pointsLabel = new Label(pointName1 + " -> " + pointName2);
+			Label pointsLabel = new Label(pointName1 + " \uD83E\uDC7A " + pointName2);
 			pointsLabel.setPadding(new Insets(2,6,1,2));
 			pointsLabel.setGraphic(
 					imageUtil.getResourceIconImage("actions/points_sm.png")
@@ -284,7 +289,7 @@ public class DistanceMatrixView{
 			double dy = y2 - y1;
 
 			// delta Y
-			Label deltaYLabel = new Label("dY = "+decimalFormat.format(dy)+"m");
+			Label deltaYLabel = new Label("\u0394Y = "+decimalFormat.format(dy)+"m");
 			deltaYLabel.setPadding(new Insets(2,6,1,2));
 			deltaYLabel.setGraphic(
 					imageUtil.getResourceIconImage("actions/ycoo_sm.png")
@@ -292,7 +297,7 @@ public class DistanceMatrixView{
 			statusBar.getLeftItems().add(deltaYLabel);
 
 			// delta X
-			Label deltaXLabel = new Label("dX = "+decimalFormat.format(dx)+"m");
+			Label deltaXLabel = new Label("\u0394X = "+decimalFormat.format(dx)+"m");
 			deltaXLabel.setPadding(new Insets(2,6,1,2));
 			deltaXLabel.setGraphic(
 					imageUtil.getResourceIconImage("actions/xcoo_sm.png")

@@ -5,6 +5,6 @@ package com.csviewpro.domain.conversion;
  */
 public interface TypeConverter<T>{
 
-	public T convert(String s);
+	T convert(String s);
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 /**
  * Created by Balsa on 2016. 11. 18..
  */
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @Controller
 public class ViewActionController {
 

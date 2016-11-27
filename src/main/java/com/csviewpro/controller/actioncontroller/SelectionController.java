@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -44,9 +45,6 @@ public class SelectionController {
 
 	@Autowired
 	private MainMenuBar mainMenuBar;
-
-	@Autowired
-	private AnalysisChartView analysisChartView;
 
 	private ObservableList<RowData> selectedPoints = null;
 	private ObservableList<TablePosition> selectedCells = null;

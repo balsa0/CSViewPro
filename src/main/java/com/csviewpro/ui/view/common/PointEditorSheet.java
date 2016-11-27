@@ -121,11 +121,9 @@ public class PointEditorSheet extends PropertySheet {
 		}
 
 		@Override
-		public Optional<ObservableValue<? extends Object>> getObservableValue() {
+		public Optional<ObservableValue<?>> getObservableValue() {
 			return Optional.of(point.get(index));
 		}
 	}
-
-
 
 }

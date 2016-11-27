@@ -1,6 +1,7 @@
 package com.csviewpro.controller.view;
 
 import com.csviewpro.controller.actioncontroller.RowActionsController;
+import com.csviewpro.controller.actioncontroller.ToolsActionController;
 import com.csviewpro.controller.actioncontroller.ViewActionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
@@ -43,6 +44,9 @@ public class TableGridController {
 
 	@Autowired
 	private NumericViewStatusBar numericViewStatusBar;
+
+	@Autowired
+	private ToolsActionController toolsActionController;
 
 	@PostConstruct
 	private void init(){
@@ -262,7 +266,7 @@ public class TableGridController {
 				imageUtil.getResourceIconImage("actions/chart_area_sm.png")
 		);
 		graphicalAnalysisMenu.setOnAction(event -> {
-			viewActionController.graphicalAnalysisAction();
+			toolsActionController.graphicalAnalysisAction();
 		});
 
 		// point relation menu
@@ -271,7 +275,16 @@ public class TableGridController {
 				imageUtil.getResourceIconImage("actions/chart_scatter_sm.png")
 		);
 		pointRelationMenu.setOnAction(event -> {
-			viewActionController.pointRelationAnalysis();
+			toolsActionController.pointRelationAnalysisAction();
+		});
+
+		// distance matrix menu
+		MenuItem distanceMatrixMenu = new MenuItem(
+				"Távolságok",
+				imageUtil.getResourceIconImage("actions/length_sm.png")
+		);
+		distanceMatrixMenu.setOnAction(event -> {
+			toolsActionController.showDistanceMatrixAction();
 		});
 
 		// delete points menu
@@ -288,6 +301,7 @@ public class TableGridController {
 		tableGrid.getMultiSelectionContextMenu().getItems().addAll(
 				graphicalAnalysisMenu,
 				pointRelationMenu,
+				distanceMatrixMenu,
 				new SeparatorMenuItem(),
 				deletePointsMenu
 		);

@@ -64,10 +64,6 @@ public class PointRelationChartView {
 	// decimal format
 	private DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-	// converter
-	private TypeConverter doubleConverter = new DoubleConverter();
-
-
 	// active listener map
 	Map<ObservableValue, ChangeListener> activeValueChangeListeners = new HashMap<>();
 

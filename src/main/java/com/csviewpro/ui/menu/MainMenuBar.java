@@ -43,6 +43,9 @@ public class MainMenuBar extends MenuBar {
 	@Autowired
 	private ViewActionController viewActionController;
 
+	@Autowired
+	private ToolsActionController toolsActionController;
+
 
 	@Autowired
 	ImageUtil imageUtil;
@@ -71,6 +74,7 @@ public class MainMenuBar extends MenuBar {
 	private Menu toolsMenu = new Menu("Eszközök");
 	private MenuItem toolsMenu_graphicalAnalysis = new MenuItem("Grafikus elemzés");
 	private MenuItem toolsMenu_pointRelation = new MenuItem("Térbeli elhelyezkedés");
+	private MenuItem toolsMenu_distanceMatrix = new MenuItem("Távolságok");
 
 	// help
 	private Menu helpMenu = new Menu("Súgó");
@@ -167,10 +171,10 @@ public class MainMenuBar extends MenuBar {
 		viewMenu.setDisable(true);
 		// refresh view
 		viewMenu_refresh.setGraphic(imageUtil.getResourceIconImage("actions/refresh_sm.png"));
-		viewMenu_refresh.setOnAction(event -> viewActionController.refreshView());
+		viewMenu_refresh.setOnAction(event -> viewActionController.refreshViewAction());
 		// reload view
 		viewMenu_reload.setGraphic(imageUtil.getResourceIconImage("actions/reload_sm.png"));
-		viewMenu_reload.setOnAction(event -> viewActionController.reloadView());
+		viewMenu_reload.setOnAction(event -> viewActionController.reloadViewAction());
 		// numerical view
 		viewMenu_numerical.setGraphic(imageUtil.getResourceIconImage("actions/numeric_sm.png"));
 		viewMenu_numerical.setOnAction(event -> {
@@ -200,16 +204,22 @@ public class MainMenuBar extends MenuBar {
 		// graphical analysis
 		toolsMenu_graphicalAnalysis.setGraphic(imageUtil.getResourceIconImage("actions/chart_area_sm.png"));
 		toolsMenu_graphicalAnalysis.setDisable(true);
-		toolsMenu_graphicalAnalysis.setOnAction(event -> viewActionController.graphicalAnalysisAction());
+		toolsMenu_graphicalAnalysis.setOnAction(event -> toolsActionController.graphicalAnalysisAction());
 
 		// relation analysis
 		toolsMenu_pointRelation.setGraphic(imageUtil.getResourceIconImage("actions/chart_scatter_sm.png"));
 		toolsMenu_pointRelation.setDisable(true);
-		toolsMenu_pointRelation.setOnAction(event -> viewActionController.pointRelationAnalysis());
+		toolsMenu_pointRelation.setOnAction(event -> toolsActionController.pointRelationAnalysisAction());
+
+		// distance matrix
+		toolsMenu_distanceMatrix.setGraphic(imageUtil.getResourceIconImage("actions/length_sm.png"));
+		toolsMenu_distanceMatrix.setDisable(true);
+		toolsMenu_distanceMatrix.setOnAction(event -> toolsActionController.showDistanceMatrixAction());
 
 		toolsMenu.getItems().addAll(
 				toolsMenu_graphicalAnalysis,
-				toolsMenu_pointRelation
+				toolsMenu_pointRelation,
+				toolsMenu_distanceMatrix
 		);
 
 	}
@@ -286,6 +296,7 @@ public class MainMenuBar extends MenuBar {
 			editMenu_unselectAll.setDisable(true);
 			toolsMenu_graphicalAnalysis.setDisable(true);
 			toolsMenu_pointRelation.setDisable(true);
+			toolsMenu_distanceMatrix.setDisable(true);
 		// if there are selected rows
 		}else{
 			editMenu_unselectAll.setDisable(false);
@@ -293,6 +304,7 @@ public class MainMenuBar extends MenuBar {
 			editMenu_deleteRow.setDisable(true);
 			toolsMenu_graphicalAnalysis.setDisable(false);
 			toolsMenu_pointRelation.setDisable(false);
+			toolsMenu_distanceMatrix.setDisable(false);
 		}
 
 		// if there are exactly 1 selected rows

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 /**
  * Created by Balsa on 2016. 11. 18..
  */
-@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @Controller
 public class ViewActionController {
 
@@ -24,14 +23,7 @@ public class ViewActionController {
 	@Autowired
 	private ApplicationUiStateController uiStateController;
 
-	@Autowired
-	private AnalysisChartView analysisChartView;
-
-	@Autowired
-	private PointRelationChartView pointRelationChartView;
-
-
-	public void refreshView(){
+	public void refreshViewAction(){
 		switch (uiStateController.getActiveState()){
 			case STATE_FILE_OPEN_NUMERIC:
 				tableGrid.refresh();
@@ -42,7 +34,7 @@ public class ViewActionController {
 		}
 	}
 
-	public void reloadView(){
+	public void reloadViewAction(){
 		switch (uiStateController.getActiveState()){
 			case STATE_FILE_OPEN_NUMERIC:
 				tableGridController.rebuildTable();
@@ -51,14 +43,6 @@ public class ViewActionController {
 			default:
 				break;
 		}
-	}
-
-	public void graphicalAnalysisAction(){
-		analysisChartView.showAndUpdate();
-	}
-
-	public void pointRelationAnalysis(){
-		pointRelationChartView.showAndUpdate();
 	}
 
 }

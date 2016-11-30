@@ -31,7 +31,7 @@ public class NumericView extends BorderPane{
 
 	private void populate(){
 
-		setTop(mainToolBar);
+//		setTop(mainToolBar);
 		setCenter(tableGrid);
 		setBottom(statusBar);
 

@@ -185,6 +185,8 @@ public class MainMenuBar extends MenuBar {
 		viewMenu_graphical.setOnAction(event -> {
 			applicationContext.getBean(ApplicationUiStateController.class).switchToGraphicViewState();
 		});
+		// disable graphical menu as it is not ready
+		viewMenu_graphical.setDisable(true);
 
 		// add items
 		viewMenu.getItems().addAll(
@@ -278,7 +280,8 @@ public class MainMenuBar extends MenuBar {
 		// view specific stuff
 		if(uiState == ApplicationUiStateController.UiState.STATE_FILE_OPEN_NUMERIC){
 			// specific to numeric view
-			viewMenu_graphical.setDisable(false);
+			// disable graphical menu as it is not ready
+			viewMenu_graphical.setDisable(true);
 			viewMenu_numerical.setDisable(true);
 		}else if(uiState == ApplicationUiStateController.UiState.STATE_FILE_OPEN_GRAPHIC){
 			// specific to graphical view

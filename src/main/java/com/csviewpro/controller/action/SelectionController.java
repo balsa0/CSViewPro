@@ -1,28 +1,22 @@
-package com.csviewpro.controller.actioncontroller;
+package com.csviewpro.controller.action;
 
 import com.csviewpro.controller.view.StatusBarController;
-import com.csviewpro.domain.conversion.DoubleConverter;
-import com.csviewpro.domain.conversion.TypeConverter;
 import com.csviewpro.domain.model.RowData;
 import com.csviewpro.service.WorkspaceDataService;
 import com.csviewpro.ui.menu.MainMenuBar;
-import com.csviewpro.ui.view.common.AnalysisChartView;
 import com.csviewpro.ui.view.numeric.NumericView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.google.common.collect.Tables;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

@@ -1,4 +1,4 @@
-package com.csviewpro.controller.actioncontroller;
+package com.csviewpro.controller.action;
 
 import com.csviewpro.ui.view.common.AnalysisChartView;
 import com.csviewpro.ui.view.common.DistanceMatrixView;

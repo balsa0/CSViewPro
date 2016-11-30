@@ -1,9 +1,7 @@
-package com.csviewpro.controller.actioncontroller;
+package com.csviewpro.controller.action;
 
 import com.csviewpro.controller.util.ApplicationUiStateController;
 import com.csviewpro.controller.view.TableGridController;
-import com.csviewpro.ui.view.common.AnalysisChartView;
-import com.csviewpro.ui.view.common.PointRelationChartView;
 import com.csviewpro.ui.view.numeric.assets.TableGrid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

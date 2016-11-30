@@ -1,7 +1,7 @@
 package com.csviewpro.ui.view.common;
 
-import com.csviewpro.controller.actioncontroller.RowActionsController;
-import com.csviewpro.controller.actioncontroller.SelectionController;
+import com.csviewpro.controller.action.RowActionsController;
+import com.csviewpro.controller.action.SelectionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.conversion.DoubleConverter;
 import com.csviewpro.domain.conversion.TypeConverter;

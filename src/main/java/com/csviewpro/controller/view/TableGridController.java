@@ -1,8 +1,8 @@
 package com.csviewpro.controller.view;
 
-import com.csviewpro.controller.actioncontroller.RowActionsController;
-import com.csviewpro.controller.actioncontroller.ToolsActionController;
-import com.csviewpro.controller.actioncontroller.ViewActionController;
+import com.csviewpro.controller.action.RowActionsController;
+import com.csviewpro.controller.action.ToolsActionController;
+import com.csviewpro.controller.action.ViewActionController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.domain.model.ColumnDescriptor;
 import com.csviewpro.domain.model.DataSet;

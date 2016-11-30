@@ -1,7 +1,7 @@
 package com.csviewpro.ui.view.common;
 
 import com.csviewpro.controller.view.FileHistoryController;
-import com.csviewpro.controller.actioncontroller.LoadController;
+import com.csviewpro.controller.action.LoadController;
 import com.csviewpro.controller.util.ImageUtil;
 import com.csviewpro.ui.toolbar.FileHistoryToolbar;
 import javafx.scene.control.ContextMenu;

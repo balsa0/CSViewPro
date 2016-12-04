@@ -13,10 +13,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<name>CSView Pro Desktop application</name>
-	<contributors>
-		<contributor>Balázs Kóti</contributor>
-	</contributors>
 
 	<groupId>com.csviewpro</groupId>
 	<artifactId>csviewpro-desktop</artifactId>
